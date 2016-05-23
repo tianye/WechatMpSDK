@@ -1,0 +1,19 @@
+{
+    "name": "tianye/wechat-mp-sdk",
+    "description": "这是一个漂亮的微信SDK.",
+    "authors": [
+        {
+            "name": "tianye",
+            "email": "3217834@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "autoload": {
+        "files": [],
+        "psr-4": {
+            "WxEngine\\": "src/"
+        }
+    }
+}
