@@ -2,8 +2,6 @@
 namespace Wechat;
 
 use Wechat\API\BaseApi;
-use Think\Log;
-
 
 /**
  * 微信接口 客户端基类.
@@ -12,12 +10,11 @@ use Think\Log;
  */
 class Api
 {
-    private static $error = ''; // 错误信息;
-    private static $selfInstanceMap = array(); // 实例列表;
-    private static $postQueryStr = array(); // post数据时 需要携带的查询字符串
+    private static $error           = ''; // 错误信息;
+    private static $selfInstanceMap = []; // 实例列表;
+    private static $postQueryStr    = []; // post数据时 需要携带的查询字符串
 
     private static $API_URL; // 微信接口地址
-    private static $API_TYPE; // 微信接口类型
 
     private static $APP_ID; // 应用ID;
     private static $APP_SECRET; // 应用密钥;
@@ -34,18 +31,18 @@ class Api
      *
      * @date   2015-12-08
      *
-     * @param string $apiurl       微信接口地址
-     * @param string $appid        服务号APP_ID
-     * @param string $appsecret    服务号APP_SECRET
-     * @param string $originalid   服务号ORIGINAL_ID
+     * @param string $apiurl     微信接口地址
+     * @param string $appid      服务号APP_ID
+     * @param string $appsecret  服务号APP_SECRET
+     * @param string $originalid 服务号ORIGINAL_ID
      */
     public static function init($appid, $appsecret, $originalid = '', $token, $encoding_aes_key, $apiurl = 'https://api.weixin.qq.com/')
     {
-        self::$API_URL = $apiurl ? $apiurl : 'https://api.weixin.qq.com/';
-        self::$APP_ID = $appid;
-        self::$APP_SECRET = $appsecret;
-        self::$ORIGINAL_ID = $originalid;
-        self::$TOKEN = $token;
+        self::$API_URL          = $apiurl ? $apiurl : 'https://api.weixin.qq.com/';
+        self::$APP_ID           = $appid;
+        self::$APP_SECRET       = $appsecret;
+        self::$ORIGINAL_ID      = $originalid;
+        self::$TOKEN            = $token;
         self::$ENCODING_AES_KEY = $encoding_aes_key;
     }
 
@@ -63,7 +60,7 @@ class Api
     public static function factory($className)
     {
         if (!$className || !is_string($className)) {
-            E('类名参数不正确');
+            exit('类名参数不正确');
         }
 
         $className = __NAMESPACE__ . '\\API\\' . $className . 'Api';
@@ -71,7 +68,7 @@ class Api
         if (!array_key_exists($className, self::$selfInstanceMap)) {
             $api = new $className();
             if (!$api instanceof BaseApi) {
-                E($className . ' 必须继承 BaseApi');
+                exit($className . ' 必须继承 BaseApi');
             }
             self::$selfInstanceMap[$className] = $api;
         }
@@ -90,8 +87,6 @@ class Api
      */
     public static function setError($errorText)
     {
-        Log::write($errorText, Log::ERR);
-
         self::$error = $errorText;
     }
 
@@ -131,7 +126,7 @@ class Api
      *
      * @date   2015-08-03
      *
-     * @param string $url  参数名
+     * @param string $url 参数名
      */
     public static function setApiUrl($url)
     {
@@ -155,14 +150,14 @@ class Api
         //$token = self::cache($key);
         $token = S($key);
         if (false == $token || $jus) {
-            $appid = self::$APP_ID;
+            $appid     = self::$APP_ID;
             $appsecert = self::$APP_SECRET;
-            $module = 'token';
-            $queryStr = array(
+            $module    = 'token';
+            $queryStr  = [
                 'grant_type' => 'client_credential',
-                'appid' => $appid,
-                'secret' => $appsecert,
-            );
+                'appid'      => $appid,
+                'secret'     => $appsecert,
+            ];
 
             $res = self::_get($module, '', $queryStr, false);
             if (false === $res) {
@@ -191,17 +186,19 @@ class Api
 
     public static function getWxIpList()
     {
-        $module = 'getcallbackip';
-        $queryStr = array();
-        $res = self::_get($module, '', $queryStr);
+        $module   = 'getcallbackip';
+        $queryStr = [];
+        $res      = self::_get($module, '', $queryStr);
         if (!$res) {
-            E($this->getError());
+            exit(self::getError());
         }
+
         return $res;
     }
 
     /**
      * 获取AppId
+     *
      * @return string AppId
      */
     public static function getAppId()
@@ -211,6 +208,7 @@ class Api
 
     /**
      * 获取ENCODING_AES_KEY
+     *
      * @return string ENCODING_AES_KEY
      */
     public static function getEncoding_Aes_Key()
@@ -220,6 +218,7 @@ class Api
 
     /**
      * 获取TOKEN
+     *
      * @return string TOKEN
      */
     public static function getToken()
@@ -229,6 +228,7 @@ class Api
 
     /**
      * 获取AppSecret
+     *
      * @return string AppSecret
      */
     public static function getAppSecret()
@@ -250,15 +250,15 @@ class Api
      *
      * @return array 错误时返回false
      */
-    public static function _get($module, $node, $queryStr = array(), $arsort = true, $apitype = 'cgi-bin')
+    public static function _get($module, $node, $queryStr = [], $arsort = true, $apitype = 'cgi-bin')
     {
         //不需要 token 参数
-        $no_module = array('token', 'showqrcode');
+        $no_module = ['token', 'showqrcode'];
 
-        $no_apitye = array('sns');
+        $no_apitye = ['sns'];
 
         if (in_array($apitype, $no_apitye) || in_array($module, $no_module)) {
-            $queryStr = $queryStr;
+            //$queryStr = $queryStr;
         } elseif ($module != 'token') {
             $info = self::getAccessToken();
 
@@ -282,26 +282,26 @@ class Api
         $apiUrl .= '?' . $queryStr;
 
         $apiUrl = urldecode($apiUrl);
-        $ch = curl_init($apiUrl);
+        $ch     = curl_init($apiUrl);
         curl_setopt($ch, CURLOPT_URL, $apiUrl);
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
-        $res = curl_exec($ch);
+        $res      = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         $header = '';
-        $body = $res;
+        $body   = $res;
         if ($httpcode == 200) {
             list($header, $body) = explode("\r\n\r\n", $res, 2);
             $header = self::http_parse_headers($header);
         }
 
-        $result = array();
-        $result['info'] = $body;
+        $result           = [];
+        $result['info']   = $body;
         $result['header'] = $header;
         $result['status'] = $httpcode;
 
@@ -312,6 +312,7 @@ class Api
             return $rest;
         }
     }
+
     /**
      * 用post的方式访问接口.
      *
@@ -359,9 +360,9 @@ class Api
                 }
             }
         }
-        \Think\Log::record(print_r($data, true));
+
         $apiUrl = urldecode($apiUrl);
-        $ch = curl_init();
+        $ch     = curl_init();
 
         $php_version = explode('-', phpversion());
         $php_version = $php_version[0];
@@ -378,20 +379,20 @@ class Api
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
-        $res = trim(curl_exec($ch));
+        $res      = trim(curl_exec($ch));
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         $header = '';
-        $body = $res;
+        $body   = $res;
         if ($httpcode == 200) {
             list($header, $body) = explode("\r\n\r\n", $res, 2);
             //list($header, $body) = explode("keep-alive", $res, 2);
             $header = self::http_parse_headers($header);
         }
 
-        $result = array();
-        $result['info'] = $body;
+        $result           = [];
+        $result['info']   = $body;
         $result['header'] = $header;
         $result['status'] = $httpcode;
 
@@ -415,6 +416,7 @@ class Api
         $apiUrl = $urlarr['scheme'] . '://' . $urlarr['host'] . $urlarr['path'];
         $apiUrl .= '?' . http_build_query($parr);
 
+        $ch = curl_init();
         curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
         curl_setopt($ch, CURLOPT_URL, $apiUrl);
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
@@ -425,20 +427,20 @@ class Api
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
-        $res = trim(curl_exec($ch));
+        $res      = trim(curl_exec($ch));
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         $header = '';
-        $body = $res;
+        $body   = $res;
         if ($httpcode == 200) {
             list($header, $body) = explode("\r\n\r\n", $res, 2);
             //list($header, $body) = explode("keep-alive", $res, 2);
             $header = self::http_parse_headers($header);
         }
 
-        $result = array();
-        $result['info'] = $body;
+        $result           = [];
+        $result['info']   = $body;
         $result['header'] = $header;
         $result['status'] = $httpcode;
 
@@ -446,6 +448,8 @@ class Api
         if ($rest_retry === 'retry') {
             return false;
         }
+
+        return $rest_retry;
     }
 
     //token 刷新后重试 get
@@ -460,26 +464,26 @@ class Api
         $apiUrl .= '?' . http_build_query($parr);
 
         $apiUrl = urldecode($apiUrl);
-        $ch = curl_init($apiUrl);
+        $ch     = curl_init($apiUrl);
         curl_setopt($ch, CURLOPT_URL, $apiUrl);
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
-        $res = curl_exec($ch);
+        $res      = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         $header = '';
-        $body = $res;
+        $body   = $res;
         if ($httpcode == 200) {
             list($header, $body) = explode("\r\n\r\n", $res, 2);
             $header = self::http_parse_headers($header);
         }
 
-        $result = array();
-        $result['info'] = $body;
+        $result           = [];
+        $result['info']   = $body;
         $result['header'] = $header;
         $result['status'] = $httpcode;
 
@@ -488,6 +492,8 @@ class Api
         if ($rest_retry === 'retry') {
             return false;
         }
+
+        return $rest_retry;
     }
 
     /**
@@ -503,26 +509,29 @@ class Api
      */
     public static function packData($apiReturnData)
     {
-        $status = $apiReturnData['status'];
-        $header = $apiReturnData['header'];
+        $status     = $apiReturnData['status'];
+        $header     = $apiReturnData['header'];
         $returnData = $apiReturnData['info'];
 
         if ($status != 200 && empty($returnData)) {
             self::setError('接口服务器连接失败.');
+
             return false;
         }
         $apiReturnData = json_decode($returnData, true);
 
         if (!$apiReturnData && substr($header['Content-Type'], 0, 16) != 'application/json') {
-            $apiReturnData = array();
+            $apiReturnData            = [];
             $apiReturnData['content'] = $returnData;
-            $apiReturnData['type'] = $header['Content-Type'];
-            $apiReturnData['size'] = $header['Content-Length'];
+            $apiReturnData['type']    = $header['Content-Type'];
+            $apiReturnData['size']    = $header['Content-Length'];
+
             return $apiReturnData;
         }
 
         if ($status != 200 && !$apiReturnData) {
             self::setError($returnData);
+
             return false;
         }
 
@@ -535,6 +544,7 @@ class Api
             self::setError($error);
 
             $rest = 'retry';
+
             return $rest;
         }
 
@@ -573,9 +583,9 @@ class Api
     public static function encrypt($data, $key, $expire = 0)
     {
         $data = base64_encode($data);
-        $x = 0;
-        $len = strlen($data);
-        $l = strlen($key);
+        $x    = 0;
+        $len  = strlen($data);
+        $l    = strlen($key);
         $char = '';
 
         for ($i = 0; $i < $len; $i++) {
@@ -600,8 +610,8 @@ class Api
      */
     public static function http_parse_headers($raw_headers)
     {
-        $headers = array();
-        $key = ''; // [+]
+        $headers = [];
+        $key     = ''; // [+]
 
         foreach (explode("\n", $raw_headers) as $i => $h) {
             $h = explode(':', $h, 2);
@@ -612,20 +622,20 @@ class Api
                 } elseif (is_array($headers[$h[0]])) {
                     // $tmp = array_merge($headers[$h[0]], array(trim($h[1]))); // [-]
                     // $headers[$h[0]] = $tmp; // [-]
-                    $headers[$h[0]] = array_merge($headers[$h[0]], array(trim($h[1]))); // [+]
+                    $headers[$h[0]] = array_merge($headers[$h[0]], [trim($h[1])]); // [+]
                 } else {
                     // $tmp = array_merge(array($headers[$h[0]]), array(trim($h[1]))); // [-]
                     // $headers[$h[0]] = $tmp; // [-]
-                    $headers[$h[0]] = array_merge(array($headers[$h[0]]), array(trim($h[1]))); // [+]
+                    $headers[$h[0]] = array_merge([$headers[$h[0]]], [trim($h[1])]); // [+]
                 }
 
                 $key = $h[0]; // [+]
             } else {
                 // [+]
- // [+]
+                // [+]
                 if (substr($h[0], 0, 1) == "\t") {
                     // [+]
-                    $headers[$key] .= "\r\n\t".trim($h[0]);
+                    $headers[$key] .= "\r\n\t" . trim($h[0]);
                 } // [+]
                 elseif (!$key) {
                     // [+]

@@ -13,16 +13,16 @@ class UserApi extends BaseApi
      *
      * @author Tian
      *
-     * @param string $openid     用户openid
+     * @param string $openid 用户openid
      *
      * @return array 用户信息.
      */
     public function getUserMsg($openid, $lang = 'zh_CN')
     {
-        $queryStr = array(
+        $queryStr = [
             'openid' => $openid,
-            'lang' => $lang,
-        );
+            'lang'   => $lang,
+        ];
 
         $res = $this->_get('info', $queryStr);
 
@@ -34,11 +34,11 @@ class UserApi extends BaseApi
      *
      * @author Tian
      *
-     * @param  array $openidList     用户openid列表
+     * @param  array $user_list 用户openid列表
      *
      * @return array 用户信息.
      */
-    public function getUserList(array $user_list, $isarray = true)
+    public function getUserList(array $user_list)
     {
         if (!is_array($user_list)) {
             $this->setError('参数必须为一个数组');
@@ -58,15 +58,15 @@ class UserApi extends BaseApi
      *
      * @author Tian
      *
-     * @param string $next_openid     下一个openid
+     * @param string $next_openid 下一个openid
      *
      * @return array Openid列表.
      */
     public function getUserOpenidList($next_openid = '')
     {
-        $queryStr = array(
+        $queryStr = [
             'next_openid' => $next_openid,
-        );
+        ];
 
         $res = $this->_get('get', $queryStr);
 
@@ -78,17 +78,17 @@ class UserApi extends BaseApi
      *
      * @author Tian
      *
-     * @param string $openid   用户openid  sting
-     * @param string $remark  用户备注名，长度必须小于30字符
+     * @param string $openid 用户openid  sting
+     * @param string $remark 用户备注名，长度必须小于30字符
      *
      * @return string bool.
      */
     public function setUserRemark($openid, $remark = "")
     {
-        $queryStr = array(
+        $queryStr = [
             'openid' => $openid,
             'remark' => $remark,
-        );
+        ];
 
         $res = $this->_post('info/updateremark', $queryStr);
 

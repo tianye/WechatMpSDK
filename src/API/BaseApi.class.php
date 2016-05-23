@@ -3,7 +3,6 @@
 namespace Wechat\API;
 
 use Wechat\Api;
-use Think\Log;
 
 class BaseApi
 {
@@ -29,13 +28,14 @@ class BaseApi
         $className = str_replace('Api', '', $className);
         $className = strtolower($className);
 
-        $this->module = $className;
+        $this->module    = $className;
         $this->className = $className;
-        $this->apitype = 'cgi-bin';
+        $this->apitype   = 'cgi-bin';
     }
 
     /**
      * 获取AppId
+     *
      * @return string AppId
      */
     public static function getAppId()
@@ -45,6 +45,7 @@ class BaseApi
 
     /**
      * 获取AppSecret
+     *
      * @return string AppSecret
      */
     public static function getAppSecret()
@@ -62,7 +63,7 @@ class BaseApi
      * @param string $node     接口节点
      * @param array  $queryStr 需要携带的查询字符串
      *
-     * @return 接口返回的结果
+     * @return bool|array 接口返回的结果
      */
     final protected function _get($node, array $queryStr, $arsort = true)
     {
@@ -72,7 +73,7 @@ class BaseApi
             return false;
         }
 
-        $module = $this->module;
+        $module  = $this->module;
         $apitype = $this->apitype;
 
         if ($this->module != $this->className) {
@@ -93,7 +94,7 @@ class BaseApi
      * @param array  $data       需要发送的数据
      * @param bool   $jsonEncode 是否转换为jsons数据
      *
-     * @return 接口返回的结果
+     * @return bool|array 接口返回的结果
      */
     final protected function _post($node, array $data, $jsonEncode = true)
     {
@@ -103,7 +104,7 @@ class BaseApi
             return false;
         }
 
-        $module = $this->module;
+        $module  = $this->module;
         $apitype = $this->apitype;
 
         if ($this->module != $this->className) {
@@ -144,34 +145,11 @@ class BaseApi
     /**
      * 设置post操作的get参数.
      *
-     * @author Tian
-     *
-     * @date   2015-08-03
-     *
-     * @param string $name  参数名
-     * @param string $value 值
+     * @param $name
+     * @param $value
      */
     final public function setPostQueryStr($name, $value)
     {
-        return Api::setPostQueryStr($name, $value);
-    }
-
-    /**
-     * 日志调试方法
-     *
-     * @author Cui
-     *
-     * @date   2015-10-01
-     *
-     * @param  string|int|array    $info  信息
-     * @param  string              $level 日志级别
-     */
-    public function wlog($info, $level = Log::DEBUG)
-    {
-        if (is_array($info)) {
-            $info = print_r($info, true);
-        }
-
-        Log::record($info, $level);
+        Api::setPostQueryStr($name, $value);
     }
 }

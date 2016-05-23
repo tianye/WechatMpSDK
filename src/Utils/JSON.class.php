@@ -5,7 +5,7 @@
  * @author Tian.
  */
 
-namespace Org\WxEngine\Utils;
+namespace Wechat\Utils;
 
 // for PHP5.3, prevent PHP Notice msg assumed
 defined('JSON_UNESCAPED_UNICODE') || define('JSON_UNESCAPED_UNICODE', 256);

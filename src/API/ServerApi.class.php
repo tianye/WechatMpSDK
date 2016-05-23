@@ -20,15 +20,16 @@ class ServerApi extends BaseApi
      * @param string|callable $event
      * @param callable        $callback
      *
-     * @return Server
+     * @return bool Server
      */
+
     public function on($target, $event, $callback = null)
     {
-        $echostr        = I('get.echostr', null, 'htmlspecialchars');
+        $echostr        = $_GET['echostr'];
         $checkSignature = $this->checkSignature();
 
         if (!$checkSignature) {
-            E("签名验证失败");
+            exit("签名验证失败");
         }
 
         if (!empty($echostr)) {
@@ -42,7 +43,7 @@ class ServerApi extends BaseApi
         }
 
         if (!is_callable($callback)) {
-            E("$callback 不是一个可调用的函数或方法");
+            exit("$callback 不是一个可调用的函数或方法");
         }
 
         $rest = $this->$target($event);
@@ -64,36 +65,34 @@ class ServerApi extends BaseApi
 
             $rest_xml = $this->arrayToXml($rest_array);
 
-            $msg_signature = I('get.msg_signature', null, 'htmlspecialchars');
+            $msg_signature = $_GET['msg_signature'];
             if (!empty($msg_signature) && $msg_signature != '') {
-                $this->wlog($rest_xml);
                 $rest_xml = $this->encryptMsg($rest_xml);
             }
 
-            $this->wlog($rest_xml);
-
-            exit($rest_xml);
+            echo $rest_xml;
         } else {
-            return false;
+            exit('FAILURE');
         }
     }
 
     /**
      * 验证签名
      *
-     * @param string $signature [签名]
-     * @param int    $timestamp [时间戳]
-     * @param string $nonce     [随机字符串]
-     * @param string $token     [token]
+     * string $signature [签名]
+     * int    $timestamp [时间戳]
+     * string $nonce     [随机字符串]
+     *
+     * @param string $token [token]
      *
      * @return bool
      */
     public function checkSignature($token = null)
     {
         $config_token = API::getToken();
-        $signature    = I('get.signature', null, 'htmlspecialchars');
-        $timestamp    = I('get.timestamp', null, 'htmlspecialchars');
-        $nonce        = I('get.nonce', null, 'htmlspecialchars');
+        $signature    = $_GET['signature'];
+        $timestamp    = $_GET['timestamp'];
+        $nonce        = $_GET['nonce'];
         $token        = empty($token) ? $config_token : $token;
         $tmpArr       = [$token, $timestamp, $nonce];
         sort($tmpArr, SORT_STRING);
@@ -110,18 +109,20 @@ class ServerApi extends BaseApi
     /**
      * 生成签名 - 用作 转发到第三方
      *
-     * @param string $token [token]
+     * @param string $token
+     * @param string $time
+     * @param string $nonce
+     *
+     * @return bool|string
      */
     public function makeSignature($token = null, $time = null, $nonce = null)
     {
         if (!is_string($token) || empty($token)) {
-            E("$token 参数错误");
-
-            return false;
+            exit("$token 参数错误");
         }
 
-        $timestamp = !empty($time) ? $time : I('get.timestamp', null, 'htmlspecialchars');
-        $nonce     = !empty($nonce) ? $nonce : I('get.nonce', null, 'htmlspecialchars');
+        $timestamp = !empty($time) ? $time : $_GET['timestamp'];
+        $nonce     = !empty($nonce) ? $nonce : $_GET['nonce'];
         $tmpArr    = [$token, $timestamp, $nonce];
         sort($tmpArr, SORT_STRING);
         $tmpStr = implode($tmpArr);
@@ -136,15 +137,15 @@ class ServerApi extends BaseApi
      * @param string $url      [地址]
      * @param string $token    [token]
      * @param string $xml      [XML]
-     * @param string $encipher [是否加密]
+     * @param bool   $encipher [是否加密]
      *
-     * @return XML
+     * @return array XML
      */
     public function receiveAgent($url = '', $token = '', $xml = '', $encipher = false)
     {
         $object = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
 
-        $object = objectToArray($object);
+        $object = json_decode(json_encode($object), true);
 
         if (isset($object['Encrypt']) && !empty($object['Encrypt']) && $object['Encrypt'] != '') {
             $xml = $this->decryptMsg($xml);
@@ -154,7 +155,7 @@ class ServerApi extends BaseApi
             $xml = $this->encryptMsg($xml);
 
             $object_enc                    = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
-            $object_enc                    = objectToArray($object_enc);
+            $object_enc                    = json_decode(json_encode($object_enc), true);
             $postQueryStr                  = [];
             $postQueryStr['timestamp']     = $object_enc['TimeStamp'];
             $postQueryStr['nonce']         = $object_enc['Nonce'];
@@ -179,13 +180,13 @@ class ServerApi extends BaseApi
 
         if ($rest) {
             $object_rest = simplexml_load_string($rest, 'SimpleXMLElement', LIBXML_NOCDATA);
-            $object_rest = objectToArray($object_rest);
+            $object_rest = json_decode(json_encode($object_rest), true);
 
             if (!empty($object_rest['MsgSignature']) && !empty($object_rest['TimeStamp']) && !empty($object_rest['Nonce']) && !empty($object_rest['Encrypt'])) {
                 $rest = $this->decryptMsg($rest, $object_rest['MsgSignature'], $object_rest['TimeStamp'], $object_rest['Nonce']);
             }
             $object_rest = simplexml_load_string($rest, 'SimpleXMLElement', LIBXML_NOCDATA);
-            $rest_array  = objectToArray($object_rest);
+            $rest_array  = json_decode(json_encode($object_rest), true);
 
             return $rest_array;
         } else {
@@ -196,11 +197,13 @@ class ServerApi extends BaseApi
     /**
      * 加密XML
      *
-     * @param string $xml [xml]
+     * @param $xml
+     *
+     * @return string
      */
     public function encryptMsg($xml)
     {
-        $appId          = API::getComponentAppId();
+        $appId          = API::getAppId();
         $token          = API::getToken();
         $encodingAesKey = API::getEncoding_Aes_Key();
 
@@ -217,24 +220,29 @@ class ServerApi extends BaseApi
         if ($errCode == 0) {
             return $encryptMsg;
         } else {
-            E($errCode);
+            exit($errCode);
         }
     }
 
     /**
      * 解密XML
      *
-     * @param string $xml [xml]
+     * @param      $xml
+     * @param null $msg_signature
+     * @param null $timeStamp
+     * @param null $nonce
+     *
+     * @return string
      */
     public function decryptMsg($xml, $msg_signature = null, $timeStamp = null, $nonce = null)
     {
-        $appId          = API::getComponentAppId();
+        $appId          = API::getAppId();
         $token          = API::getToken();
         $encodingAesKey = API::getEncoding_Aes_Key();
 
-        $msg_signature = !empty($msg_signature) ? $msg_signature : I('get.msg_signature', null, 'htmlspecialchars');
-        $timeStamp     = !empty($timeStamp) ? $timeStamp : I('get.timestamp', null, 'htmlspecialchars');
-        $nonce         = !empty($nonce) ? $nonce : I('get.nonce', null, 'htmlspecialchars');
+        $msg_signature = !empty($msg_signature) ? $msg_signature : $_GET['msg_signature'];
+        $timeStamp     = !empty($timeStamp) ? $timeStamp : $_GET['timestamp'];
+        $nonce         = !empty($nonce) ? $nonce : $_GET['nonce'];
 
         $pc  = new WXBizMsgCrypt($token, $encodingAesKey, $appId);
         $msg = '';
@@ -244,7 +252,7 @@ class ServerApi extends BaseApi
         if ($errCode == 0) {
             return $msg;
         } else {
-            E($errCode);
+            exit($errCode);
         }
     }
 
@@ -262,7 +270,7 @@ class ServerApi extends BaseApi
         if (!$object || !is_object($object) || empty($object)) {
             $xml = file_get_contents('php://input');
 
-            $msg_signature = I('get.msg_signature', null, 'htmlspecialchars');
+            $msg_signature = $_GET['msg_signature'];
 
             if (!empty($msg_signature) && $msg_signature != '') {
                 $xml = $this->decryptMsg($xml);
@@ -281,9 +289,9 @@ class ServerApi extends BaseApi
 
         if ($target == $rx_target) {
             if ($event == '*') {
-                $array = objectToArray($object);
+                $array = json_decode(json_encode($object), true);
             } elseif ($event == $rx_event) {
-                $array = objectToArray($object);
+                $array = json_decode(json_encode($object), true);
             } else {
                 $array = false;
             }
@@ -295,10 +303,13 @@ class ServerApi extends BaseApi
     }
 
     /**
-     * 作用：array转xml.
+     * array转xml.
      *
-     * @param  [array]  $arr  [数组,可多维]
+     * @param array $arr
+     * @param bool  $flag
+     * @param bool  $especial
      *
+     * @return string
      */
     public function arrayToXml($arr = [], $flag = true, $especial = false)
     {
@@ -343,8 +354,10 @@ class ServerApi extends BaseApi
     /**
      * 第三方 post 推送
      *
-     * @param  [http] $url [地址]
-     * @param  [xml] $xml  [xml]
+     * @param      $url
+     * @param null $xml
+     *
+     * @return mixed
      */
     public function https_xml($url, $xml = null)
     {

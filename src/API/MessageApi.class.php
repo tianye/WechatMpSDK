@@ -11,18 +11,18 @@ class MessageApi extends BaseApi
     /**
      * [__call 魔术方法 生成回调array]
      *
-     * @param  [funtion] $MsgType [类型]
-     * @param  [array]   $data    [参数]
+     * @param  funtion $MsgType [类型]
+     * @param  array   $datas   [参数]
      *
-     * @return [xml]          [XML]
+     * @return string xml          [XML]
      */
     public function __call($MsgType, $datas)
     {
         $MsgType = strtolower($MsgType);
 
-        $data = array();
-        $data['CreateTime']   = time();
-        $data['MsgType'] = $MsgType;
+        $data               = [];
+        $data['CreateTime'] = time();
+        $data['MsgType']    = $MsgType;
 
         $datas = reset($datas);
 
@@ -35,7 +35,7 @@ class MessageApi extends BaseApi
             $data['Music'] = $datas;
         } elseif ($MsgType == 'video') {
             $data['Video'] = $datas;
-        }else {
+        } else {
             $data[$MsgType] = $datas;
         }
 

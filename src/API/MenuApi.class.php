@@ -23,12 +23,14 @@ class MenuApi extends BaseApi
         }
 
         if (!is_array($menus)) {
-            E('子菜单必须是数组或者匿名函数返回数组');
+            $this->setError('子菜单必须是数组或者匿名函数返回数组');
+
+            return false;
         }
 
         $menus = $this->extractMenus($menus);
 
-        $data = array('button' => $menus);
+        $data = ['button' => $menus];
 
         $res = $this->_post('create', $data);
 
@@ -42,13 +44,9 @@ class MenuApi extends BaseApi
      */
     public function get()
     {
-        $queryStr = array();
+        $queryStr = [];
 
         $res = $this->_get('get', $queryStr);
-
-        if (!$res) {
-            E($this->getError());
-        }
 
         return $res;
     }
@@ -60,7 +58,7 @@ class MenuApi extends BaseApi
      */
     public function current()
     {
-        $queryStr = array();
+        $queryStr = [];
 
         $this->module = 'get_current_selfmenu_info';
 
@@ -76,7 +74,7 @@ class MenuApi extends BaseApi
      */
     public function delete()
     {
-        $queryStr = array();
+        $queryStr = [];
 
         $res = $this->_get('delete', $queryStr);
 

@@ -11,7 +11,7 @@ use Wechat\Api;
  */
 class AuthApi extends BaseApi
 {
-    const API_URL            = 'https://open.weixin.qq.com/connect/oauth2/authorize';
+    const API_URL = 'https://open.weixin.qq.com/connect/oauth2/authorize';
 
     protected static $authorizedUser;
 
@@ -28,18 +28,18 @@ class AuthApi extends BaseApi
     {
         $to !== null || $to = Url::current();
 
-        $queryStr = array(
-                   'appid'         => $this->getAppId(),
-                   'redirect_uri'  => $to,
-                   'response_type' => 'code',
-                   'scope'         => $scope,
-                   'state'         => $state,
-                  );
+        $queryStr = [
+            'appid'         => $this->getAppId(),
+            'redirect_uri'  => $to,
+            'response_type' => 'code',
+            'scope'         => $scope,
+            'state'         => $state,
+        ];
 
-        return self::API_URL.'?'.http_build_query($queryStr).'#wechat_redirect';
+        return self::API_URL . '?' . http_build_query($queryStr) . '#wechat_redirect';
     }
 
-     /**
+    /**
      * 直接跳转
      *
      * @param string $to
@@ -48,7 +48,7 @@ class AuthApi extends BaseApi
      */
     public function redirect($to = null, $scope = 'snsapi_userinfo', $state = 'STATE')
     {
-        header('Location:'.$this->url($to, $scope, $state));
+        header('Location:' . $this->url($to, $scope, $state));
 
         exit;
     }
@@ -63,34 +63,34 @@ class AuthApi extends BaseApi
      */
     public function getUser($openId, $accessToken)
     {
-        $queryStr = array(
-                    'access_token' => $accessToken,
-                    'openid'       => $openId,
-                    'lang'         => 'zh_CN',
-                   );
+        $queryStr = [
+            'access_token' => $accessToken,
+            'openid'       => $openId,
+            'lang'         => 'zh_CN',
+        ];
 
         $this->apitype = 'sns';
-        $this->module = 'userinfo';
-        $res = $this->_get('', $queryStr);
+        $this->module  = 'userinfo';
+        $res           = $this->_get('', $queryStr);
 
-        return  $res;
+        return $res;
     }
 
-     /**
+    /**
      * 获取已授权用户
      *
      * @return array $user
      */
     public function user()
     {
-        if ($this->authorizedUser || !I('get.state', false, 'htmlspecialchars') || (!$code = I('get.code', false, 'htmlspecialchars')) && I('get.state', false, 'htmlspecialchars')) {
-            return $this->authorizedUser;
+        if (self::$authorizedUser || !$_GET['state'] || (!$code = $_GET['code']) && $_GET['state']) {
+            return self::$authorizedUser;
         }
 
         $permission = $this->getAccessPermission($code);
 
         if ($permission['scope'] !== 'snsapi_userinfo') {
-            $user = array('openid' => $permission['openid']);
+            $user = ['openid' => $permission['openid']];
         } else {
             $user = $this->getUser($permission['openid'], $permission['access_token']);
         }
@@ -101,15 +101,15 @@ class AuthApi extends BaseApi
     /**
      * 通过授权获取用户
      *
-     * @param string $to
-     * @param string $state
+     * @param null   $to
      * @param string $scope
+     * @param string $state
      *
-     * @return Bag | null
+     * @return array
      */
     public function authorize($to = null, $scope = 'snsapi_userinfo', $state = 'STATE')
     {
-        if (!I('get.state', false, 'htmlspecialchars') && !$code = I('get.code', false, 'htmlspecialchars')) {
+        if (!$_GET['state'] && !$code = $_GET['code']) {
             $this->redirect($to, $scope, $state);
         }
 
@@ -126,43 +126,42 @@ class AuthApi extends BaseApi
      */
     public function accessTokenIsValid($accessToken, $openId)
     {
-        $params = array(
-                   'openid'       => $openId,
-                   'access_token' => $accessToken,
-                  );
+        $params = [
+            'openid'       => $openId,
+            'access_token' => $accessToken,
+        ];
 
         $this->apitype = 'sns';
         $this->module  = 'auth';
 
         $res = $this->_get('', $params);
 
-        return  $res;
+        return $res;
     }
 
-     /**
+    /**
      * 刷新 access_token
      *
-     * @param string $refreshToken
+     * @param $refreshToken
      *
-     * @return Bag
+     * @return bool|array
      */
     public function refresh($refreshToken)
     {
-        $queryStr = array(
-                   'appid'         => $this->getAppId(),
-                   'grant_type'    => 'refresh_token',
-                   'refresh_token' => $refreshToken,
-                  );
+        $queryStr = [
+            'appid'         => $this->getAppId(),
+            'grant_type'    => 'refresh_token',
+            'refresh_token' => $refreshToken,
+        ];
 
         $this->apitype = 'sns';
-        $this->module = 'oauth2';
-        $res = $this->_get('refresh_token', $queryStr);
+        $this->module  = 'oauth2';
+        $res           = $this->_get('refresh_token', $queryStr);
 
-        return  $res;
+        return $res;
     }
 
-
-     /**
+    /**
      * 获取access token
      *
      * @param string $code
@@ -171,17 +170,17 @@ class AuthApi extends BaseApi
      */
     public function getAccessPermission($code)
     {
-        $queryStr = array(
-                   'appid'      => $this->getAppId(),
-                   'secret'     => $this->getAppSecret(),
-                   'code'       => $code,
-                   'grant_type' => 'authorization_code',
-                  );
+        $queryStr = [
+            'appid'      => $this->getAppId(),
+            'secret'     => $this->getAppSecret(),
+            'code'       => $code,
+            'grant_type' => 'authorization_code',
+        ];
 
         $this->apitype = 'sns';
-        $this->module = 'oauth2';
-        $res = $this->_get('access_token', $queryStr);
+        $this->module  = 'oauth2';
+        $res           = $this->_get('access_token', $queryStr);
 
-        return  $res;
+        return $res;
     }
 }

@@ -11,7 +11,7 @@ class GroupsApi extends BaseApi
     /**
      * 创建用户组.
      *
-     * @param string $name     分组名 30字符以内
+     * @param string $name 分组名 30字符以内
      *
      * @return array id 分组ID  , name 分组名.
      */
@@ -19,16 +19,17 @@ class GroupsApi extends BaseApi
     {
         if (!is_string($name) || strlen($name) >= 30) {
             $this->setError('参数错误,请传入字符串或名字的长度不能大于30字符');
+
             return false;
         }
 
-        $queryStr = array(
-            'group'=>array('name' => $name)
-        );
+        $queryStr = [
+            'group' => ['name' => $name],
+        ];
 
         $res = $this->_post('create', $queryStr);
 
-        return  $res;
+        return $res;
     }
 
     /**
@@ -38,7 +39,7 @@ class GroupsApi extends BaseApi
      */
     public function get()
     {
-        $queryStr = array();
+        $queryStr = [];
 
         $res = $this->_get('get', $queryStr);
 
@@ -48,7 +49,7 @@ class GroupsApi extends BaseApi
     /**
      *  查询用户所在分组
      *
-     * @param $openid 用户ID
+     * @param string $openid 用户ID
      *
      * @return int.
      */
@@ -56,10 +57,11 @@ class GroupsApi extends BaseApi
     {
         if (!$openid) {
             $this->setError('参数错误,缺少Openid');
+
             return false;
         }
 
-        $queryStr = array('openid' => $openid);
+        $queryStr = ['openid' => $openid];
 
         $res = $this->_post('getid', $queryStr);
 
@@ -69,7 +71,7 @@ class GroupsApi extends BaseApi
     /**
      *  修改分组名
      *
-     * @param $id 分组ID,$name 分组名
+     * @param int|string $id 分组ID,$name 分组名
      *
      * @return bool.
      */
@@ -77,12 +79,13 @@ class GroupsApi extends BaseApi
     {
         if (!is_numeric($id) || !is_string($name) || strlen($name) >= 30) {
             $this->setError('参数错误,分组ID不是数字或分组名不是有效的字符串或名字的长度大于30字符');
+
             return false;
         }
 
-        $queryStr = array(
-            'group'=>array('id' => $id, 'name' => $name)
-        );
+        $queryStr = [
+            'group' => ['id' => $id, 'name' => $name],
+        ];
 
         $res = $this->_post('update', $queryStr);
 
@@ -92,7 +95,7 @@ class GroupsApi extends BaseApi
     /**
      *  删除指定分组
      *
-     * @param $id 分组ID
+     * @param int $id 分组ID
      *
      * @return bool. 注：删除成功时返回的是 '' ,删除失败时返回的是false,(包括分组ID不是数字或分组ID已经不存在)
      */
@@ -100,12 +103,13 @@ class GroupsApi extends BaseApi
     {
         if (!is_numeric($id)) {
             $this->setError('参数错误,分组ID不是数字');
+
             return false;
         }
 
-        $queryStr = array(
-            'group'=>array('id' => $id)
-        );
+        $queryStr = [
+            'group' => ['id' => $id],
+        ];
 
         $res = $this->_post('delete', $queryStr);
 
@@ -115,7 +119,7 @@ class GroupsApi extends BaseApi
     /**
      *  移动用户到指定分组
      *
-     * @param $openid 用户ID,to_groupid 指定分组ID
+     * @param string $openid 用户ID,to_groupid 指定分组ID
      *
      * @return bool.
      */
@@ -124,10 +128,11 @@ class GroupsApi extends BaseApi
     {
         if (!is_numeric($to_groupid) || !is_string($openid)) {
             $this->setError('参数错误,用户ID格式不正确或组ID不是数字');
+
             return false;
         }
 
-        $queryStr = array('openid' => $openid, 'to_groupid' => $to_groupid);
+        $queryStr = ['openid' => $openid, 'to_groupid' => $to_groupid];
 
         $res = $this->_post('members/update', $queryStr);
 
@@ -137,7 +142,7 @@ class GroupsApi extends BaseApi
     /**
      *  批量移动用户到指定分组
      *
-     * @param $openid_list 用户ID,to_groupid 指定分组ID
+     * @param array $openid_list 用户ID,to_groupid 指定分组ID
      *
      * @return bool. 注：其中批量移动时，其中有一个用户的id是错的，那么其他的也不会移动,若用户已经在目标组里那么返回值也是true
      */
@@ -145,10 +150,11 @@ class GroupsApi extends BaseApi
     {
         if (!is_array($openid_list)) {
             $this->setError('参数必须为一个数组');
+
             return false;
         }
 
-        $queryStr = array('openid_list' => $openid_list, 'to_groupid' => $to_groupid);
+        $queryStr = ['openid_list' => $openid_list, 'to_groupid' => $to_groupid];
 
         $res = $this->_post('members/batchupdate', $queryStr);
 

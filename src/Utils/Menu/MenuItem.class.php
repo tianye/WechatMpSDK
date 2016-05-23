@@ -8,7 +8,6 @@
 namespace Wechat\Utils\Menu;
 
 use Closure;
-use WechatUtils\Menu\MagicAttributes;
 
 /**
  * 菜单项
@@ -37,7 +36,7 @@ class MenuItem extends MagicAttributes
                     $key = 'url';
                     break;
                 case 'media_id':
-                // no break
+                    // no break
                 case 'view_limited':
                     $key = 'media_id';
                     break;
@@ -62,7 +61,7 @@ class MenuItem extends MagicAttributes
         }
 
         if (!is_array($buttons)) {
-            throw new Exception('子菜单必须是数组或者匿名函数返回数组', 1);
+            exit('子菜单必须是数组或者匿名函数返回数组');
         }
 
         $this->with('sub_button', $buttons);

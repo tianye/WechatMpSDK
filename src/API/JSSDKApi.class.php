@@ -11,7 +11,7 @@ use Wechat\Utils\JSON;
 class JSSDKApi extends BaseApi
 {
 
-     /**
+    /**
      * 获取JSSDK的配置数组
      *
      * @param array $APIs
@@ -24,11 +24,11 @@ class JSSDKApi extends BaseApi
     {
         $signPackage = $this->getSignature();
 
-        $base = array(
-                 'debug' => $debug
-                );
+        $base = [
+            'debug' => $debug,
+        ];
 
-        $config = array_merge($base, $signPackage, array('jsApiList' => $APIs));
+        $config = array_merge($base, $signPackage, ['jsApiList' => $APIs]);
 
         return $json ? JSON::encode($config) : $config;
     }
@@ -46,19 +46,20 @@ class JSSDKApi extends BaseApi
     {
         //$token = $this->AccessToken;
 
-        $key = 'JSAPI_TICKET'.$this->getAppId();
+        $key    = 'JSAPI_TICKET' . $this->getAppId();
         $ticket = S($key);
         if (!$ticket) {
             $this->module = 'ticket';
-            $queryStr = array(
-                'type'  =>  'jsapi'
-            );
-            $res = $this->_get('getticket', $queryStr, false);
+            $queryStr     = [
+                'type' => 'jsapi',
+            ];
+            $res          = $this->_get('getticket', $queryStr, false);
+
             if (!$res) {
-                E($this->getError());
+                return false;
             }
 
-            $ticket = $res['ticket'];
+            $ticket  = $res['ticket'];
             $expires = $res['expires_in'];
 
             S($key, $ticket, $expires - 300);
@@ -78,15 +79,17 @@ class JSSDKApi extends BaseApi
      */
     public function getSignature()
     {
+        /** @var int $timestamp */
         $timestamp = $this->getTimeStamp();
-        $nonceStr = $this->getnonceStr();
-        $ticket = $this->getTicket();
+        $nonceStr  = $this->getnonceStr();
+        $ticket    = $this->getTicket();
 
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
         $url = "$protocol$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
-        $signature_array = array();
+        /** @var array $signature_array */
+        $signature_array              = [];
         $signature_array['appId']     = $this->getAppId();
         $signature_array['nonceStr']  = $nonceStr;
         $signature_array['timestamp'] = $timestamp;
@@ -117,7 +120,7 @@ class JSSDKApi extends BaseApi
      *
      * @date   2015-12-08
      *
-     * @return timestamp
+     * @return int timestamp
      */
     public function getTimeStamp()
     {
@@ -142,7 +145,7 @@ class JSSDKApi extends BaseApi
     {
         static $nonceStr;
         if (!$nonceStr) {
-            $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            $chars    = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             $nonceStr = '';
             for ($i = 0; $i < 16; $i++) {
                 $nonceStr .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);

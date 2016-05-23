@@ -13,9 +13,9 @@ namespace Wechat\API;
 class DatacubeApi extends BaseApi
 {
 
-/**
-            用户分析数据接口
- */
+    /**
+     * 用户分析数据接口
+     */
 
     /**
      * 获取用户增减数据 (最大时间跨度 7 天)
@@ -28,19 +28,19 @@ class DatacubeApi extends BaseApi
     public function getusersummary($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getusersummary';
+        $this->module  = 'getusersummary';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
         return $res;
     }
 
-     /**
+    /**
      * 获取累计用户数据 (最大时间跨度 7 天)
      *
      * @param  string $begin_date 获取数据的起始日期，begin_date和end_date的差值需小于“最大时间跨度”（比如最大时间跨度为1时，begin_date和end_date的差值只能为0，才能小于1），否则会报错
@@ -51,21 +51,21 @@ class DatacubeApi extends BaseApi
     public function getusercumulate($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getusercumulate';
+        $this->module  = 'getusercumulate';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
         return $res;
     }
 
-/**
-            图文分析数据接口
- */
+    /**
+     * 图文分析数据接口
+     */
 
     /**
      * 获取图文群发每日数据 (最大时间跨度 1 天)
@@ -78,12 +78,12 @@ class DatacubeApi extends BaseApi
     public function getarticlesummary($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getarticlesummary';
+        $this->module  = 'getarticlesummary';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
@@ -101,12 +101,12 @@ class DatacubeApi extends BaseApi
     public function getarticletotal($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getarticletotal';
+        $this->module  = 'getarticletotal';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
@@ -124,12 +124,12 @@ class DatacubeApi extends BaseApi
     public function getuserread($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getuserread';
+        $this->module  = 'getuserread';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
@@ -147,12 +147,12 @@ class DatacubeApi extends BaseApi
     public function getuserreadhour($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getuserreadhour';
+        $this->module  = 'getuserreadhour';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
@@ -170,12 +170,12 @@ class DatacubeApi extends BaseApi
     public function getusershare($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getusershare';
+        $this->module  = 'getusershare';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
@@ -193,21 +193,21 @@ class DatacubeApi extends BaseApi
     public function getusersharehour($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getusersharehour';
+        $this->module  = 'getusersharehour';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
         return $res;
     }
 
-/**
-            消息分析数据接口
- */
+    /**
+     * 消息分析数据接口
+     */
 
     /**
      * 获取消息发送概况数据 (最大时间跨度 7 天)
@@ -220,19 +220,19 @@ class DatacubeApi extends BaseApi
     public function getupstreammsg($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getupstreammsg';
+        $this->module  = 'getupstreammsg';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
         return $res;
     }
 
-     /**
+    /**
      * 获取消息分送分时数据 (最大时间跨度 1 天)
      *
      * @param  string $begin_date 获取数据的起始日期，begin_date和end_date的差值需小于“最大时间跨度”（比如最大时间跨度为1时，begin_date和end_date的差值只能为0，才能小于1），否则会报错
@@ -243,12 +243,12 @@ class DatacubeApi extends BaseApi
     public function getupstreammsghour($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getupstreammsghour';
+        $this->module  = 'getupstreammsghour';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
@@ -266,12 +266,12 @@ class DatacubeApi extends BaseApi
     public function getupstreammsgweek($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getupstreammsgweek';
+        $this->module  = 'getupstreammsgweek';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
@@ -289,12 +289,12 @@ class DatacubeApi extends BaseApi
     public function getupstreammsgmonth($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getupstreammsgmonth';
+        $this->module  = 'getupstreammsgmonth';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
@@ -312,12 +312,12 @@ class DatacubeApi extends BaseApi
     public function getupstreammsgdist($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getupstreammsgdist';
+        $this->module  = 'getupstreammsgdist';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
@@ -335,12 +335,12 @@ class DatacubeApi extends BaseApi
     public function getupstreammsgdistweek($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getupstreammsgdistweek';
+        $this->module  = 'getupstreammsgdistweek';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
@@ -358,21 +358,21 @@ class DatacubeApi extends BaseApi
     public function getupstreammsgdistmonth($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getupstreammsgdistmonth';
+        $this->module  = 'getupstreammsgdistmonth';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
         return $res;
     }
 
-/**
-            接口分析数据接口
- */
+    /**
+     * 接口分析数据接口
+     */
 
     /**
      * 获取接口分析数据 (最大时间跨度 30 天)
@@ -385,12 +385,12 @@ class DatacubeApi extends BaseApi
     public function getinterfacesummary($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getinterfacesummary';
+        $this->module  = 'getinterfacesummary';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 
@@ -408,12 +408,12 @@ class DatacubeApi extends BaseApi
     public function getinterfacesummaryhour($begin_date, $end_date)
     {
         $this->apitype = 'datacube';
-        $this->module = 'getinterfacesummaryhour';
+        $this->module  = 'getinterfacesummaryhour';
 
-        $queryStr = array(
+        $queryStr = [
             'begin_date' => $begin_date,
-            'end_date'   => $end_date
-        );
+            'end_date'   => $end_date,
+        ];
 
         $res = $this->_post('', $queryStr);
 

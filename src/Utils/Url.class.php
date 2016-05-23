@@ -5,7 +5,7 @@
  * @author Tian.
  */
 
-namespace Org\WxEngine\Utils;
+namespace Wechat\Utils;
 
 /**
  * 链接
