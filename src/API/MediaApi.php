@@ -110,7 +110,7 @@ class MediaApi extends BaseApi
         $this->setPostQueryStr('type', $type);
 
         $name      = 'media'; // 设置上传文件键名 固定为media
-        $file_name = md5(uniqid(rand(1000, 9999))) . $file_tail; // 设置上传文件名
+        $file_name = md5(uniqid(rand(1000, 9999))) . '.' . $file_tail[1]; // 设置上传文件名
         $file_type = $rest['type'];
         $key       = "name=\"{$name}\"; filename=\"{$file_name}\"\r\nContent-Type: {$file_type}\r\n"; // curl设置上传文件的一种方法.
 
@@ -311,7 +311,7 @@ class MediaApi extends BaseApi
 
         $file_tail = explode("/", $rest['type']);
         $name      = 'media';
-        $file_name = md5(uniqid(rand(1000, 9999))) . $file_tail;
+        $file_name = md5(uniqid(rand(1000, 9999))) . '.' . $file_tail[1]; // 设置上传文件名
         $file_type = $rest['type'];
         $imgSize   = $rest['size'];
         //1M = 1048576字节 微信允许上传的最大文件
