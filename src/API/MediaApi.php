@@ -12,7 +12,7 @@ use Wechat\Api;
 class MediaApi extends BaseApi
 {
     /**
-     * 上传临时媒体文件.
+     * 上传临时媒体文件.   $file 为  /logo/img.jpeg 服务器上图片路径
      *
      * @author Tian
      *
@@ -56,7 +56,7 @@ class MediaApi extends BaseApi
      *
      * @date   2015-08-02
      *
-     * @param string $file 文件
+     * @param string $file 文件  为 form 表单的 $_FILES['xxx'];
      * @param string $type 文件类型
      *
      * @return array 接口返回结果
@@ -79,6 +79,43 @@ class MediaApi extends BaseApi
 
         $param       = [];
         $param[$key] = $filecontent;
+
+        $node = 'upload';
+
+        $res = $this->_post($node, $param, false);
+
+        return $res;
+    }
+
+    /**
+     * 上传临时媒体文件. $url 为 http://itse.cc/img.jpeg
+     *
+     * @param        $url
+     * @param string $type
+     *
+     * @return array|bool
+     */
+    public function uploadCurl($url, $type = 'image')
+    {
+        if (!$url || !$type) {
+            $this->setError('参数缺失');
+
+            return false;
+        }
+
+        $rest = self::curl_get($url);
+
+        $file_tail = explode("/", $rest['type']);
+
+        $this->setPostQueryStr('type', $type);
+
+        $name      = 'media'; // 设置上传文件键名 固定为media
+        $file_name = md5(uniqid(rand(1000, 9999))) . $file_tail; // 设置上传文件名
+        $file_type = $rest['type'];
+        $key       = "name=\"{$name}\"; filename=\"{$file_name}\"\r\nContent-Type: {$file_type}\r\n"; // curl设置上传文件的一种方法.
+
+        $param       = [];
+        $param[$key] = $rest['content'];
 
         $node = 'upload';
 
@@ -198,7 +235,7 @@ class MediaApi extends BaseApi
     }
 
     /**
-     * 上传卡券logo图片.
+     * 上传卡券logo图片. $file 为 /logo/img.jpeg
      *
      * @param  string $file 媒体文件路径 图片仅支持jpg/png格式，大小必须在1MB以下
      *
@@ -229,7 +266,7 @@ class MediaApi extends BaseApi
     }
 
     /**
-     * 上传卡券logo图片.
+     * 上传卡券logo图片. $file为 $_FILES['xxx'];
      *
      * @param  string $file 文件
      *
@@ -257,5 +294,76 @@ class MediaApi extends BaseApi
         $res = $this->_post($node, $param, false);
 
         return $res;
+    }
+
+    /**
+     * 上传卡券logo图片. $url 为 http://itse.cc/img.jpeg
+     *
+     * @param $url
+     *
+     * @return array|bool
+     */
+    function curlCardUpload_img($url)
+    {
+        $node = 'uploadimg';
+
+        $rest = self::curl_get($url);
+
+        $file_tail = explode("/", $rest['type']);
+        $name      = 'media';
+        $file_name = md5(uniqid(rand(1000, 9999))) . $file_tail;
+        $file_type = $rest['type'];
+        $imgSize   = $rest['size'];
+        //1M = 1048576字节 微信允许上传的最大文件
+        if ($imgSize >= 1048576) {
+            $this->error = '文件过大';
+
+            return false;
+        }
+        // 读取临时文件里 上传文件的信息
+        $key = "name=\"{$name}\"; filename=\"{$file_name}\"\r\nContent-Type: {$file_type}\r\n";
+
+        $param       = [];
+        $param[$key] = $rest['content'];
+
+        $res = $this->_post($node, $param, false);
+
+        return $res;
+    }
+
+    /**
+     * curl 抓取图片 + 头信息
+     *
+     * @param $url
+     *
+     * @return array
+     */
+    private static function curl_get($url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+        $res      = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $header = '';
+        $body   = $res;
+
+        if ($httpcode == 200) {
+            list($header, $body) = explode("\r\n\r\n", $res, 2);
+            $header = Api::http_parse_headers($header);
+        }
+
+        $apiReturnData            = [];
+        $apiReturnData['type']    = $header['Content-Type'];
+        $apiReturnData['size']    = $header['Content-Length'];
+        $apiReturnData['content'] = $body;
+
+        return $apiReturnData;
     }
 }
