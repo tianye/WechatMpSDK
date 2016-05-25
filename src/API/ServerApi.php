@@ -70,7 +70,7 @@ class ServerApi extends BaseApi
                 $rest_xml = $this->encryptMsg($rest_xml);
             }
 
-            echo $rest_xml;
+            exit($rest_xml);
         } else {
             exit('FAILURE');
         }
