@@ -44,10 +44,8 @@ class JSSDKApi extends BaseApi
      */
     public function getTicket()
     {
-        //$token = $this->AccessToken;
-
         $key    = 'JSAPI_TICKET' . $this->getAppId();
-        $ticket = S($key);
+        $ticket = $this->cache($key);
         if (!$ticket) {
             $this->module = 'ticket';
             $queryStr     = [
@@ -62,7 +60,7 @@ class JSSDKApi extends BaseApi
             $ticket  = $res['ticket'];
             $expires = $res['expires_in'];
 
-            S($key, $ticket, $expires - 300);
+            $this->cache($key, $ticket, $expires - 1000);
         }
 
         return $ticket;

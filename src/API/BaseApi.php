@@ -153,6 +153,20 @@ class BaseApi
     }
 
     /**
+     * 缓存方法
+     *
+     * @param string $name    缓存名
+     * @param string $value   缓存值 如果不输入值 则根据缓存名返回缓存值.
+     * @param int    $expires 缓存过期时间 默认0 即永不超时. 单位秒
+     *
+     * @return bool|null|string
+     */
+    final public function cache($name, $value = '', $expires = 0)
+    {
+        return Api::cache($name, $value, $expires);
+    }
+
+    /**
      * 设置post操作的get参数.
      *
      * @param $name

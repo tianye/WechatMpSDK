@@ -2,6 +2,7 @@
 namespace Wechat;
 
 use Wechat\API\BaseApi;
+use Wechat\CacheDriver\BaseDriver;
 
 /**
  * 微信接口 客户端基类.
@@ -13,6 +14,8 @@ class Api
     private static $error           = ''; // 错误信息;
     private static $selfInstanceMap = []; // 实例列表;
     private static $postQueryStr    = []; // post数据时 需要携带的查询字符串
+
+    private static $CACHE_DRIVER = ''; // 接口缓存驱动类名
 
     private static $apiData; //返回的数据
 
@@ -38,7 +41,7 @@ class Api
      * @param string $appsecret  服务号APP_SECRET
      * @param string $originalid 服务号ORIGINAL_ID
      */
-    public static function init($appid, $appsecret, $originalid = '', $token, $encoding_aes_key, $apiurl = 'https://api.weixin.qq.com/')
+    public static function init($appid, $appsecret, $originalid = '', $token, $encoding_aes_key, $apiurl = 'https://api.weixin.qq.com/', $cacheDriver = 'ThinkPHP')
     {
         self::$API_URL          = $apiurl ? $apiurl : 'https://api.weixin.qq.com/';
         self::$APP_ID           = $appid;
@@ -46,6 +49,7 @@ class Api
         self::$ORIGINAL_ID      = $originalid;
         self::$TOKEN            = $token;
         self::$ENCODING_AES_KEY = $encoding_aes_key;
+        self::$CACHE_DRIVER     = $cacheDriver;
     }
 
     /**
@@ -167,9 +171,8 @@ class Api
      */
     public static function getAccessToken($jus = false)
     {
-        $key = self::$APP_ID . 'access_token';
-        //$token = self::cache($key);
-        $token = S($key);
+        $key   = self::$APP_ID . 'access_token';
+        $token = self::cache($key);
         if (false == $token || $jus) {
             $appid     = self::$APP_ID;
             $appsecert = self::$APP_SECRET;
@@ -187,9 +190,7 @@ class Api
 
             $token = $res['access_token'];
 
-            //self::cache($key, $token, 7200 - 300);
-
-            S($key, $token, 3000);
+            self::cache($key, $token, 3000);
         }
 
         return $token;
@@ -674,5 +675,44 @@ class Api
         }
 
         return $headers;
+    }
+
+    /**
+     * 缓存方法
+     *
+     * @param string $name    缓存名
+     * @param string $value   缓存值 如果不输入值 则根据缓存名返回缓存值.
+     * @param int    $expires 缓存过期时间 默认0 即永不超时. 单位秒
+     *
+     * @return bool|null|string
+     */
+    public static function cache($name, $value = '', $expires = 0)
+    {
+        if (!$name || !is_string($name)) {
+            self::setError('参数错误!');
+
+            return false;
+        }
+
+        /** @var BaseDriver $cacheDriver */
+        static $cacheDriver;
+
+        if (!isset($cacheDriver)) {
+            $cacheDriver = __NAMESPACE__ . '\\CacheDriver\\' . self::$CACHE_DRIVER . 'Driver';
+            $cacheDriver = new $cacheDriver(__DIR__ . '/Cache/');
+        }
+
+        if (!$value && $value !== 0) {
+            $value = $cacheDriver->_get($name);
+            if (false == $value) {
+                $value = null;
+            }
+
+            return $value;
+        }
+
+        $res = $cacheDriver->_set($name, $value, $expires);
+
+        return $res ? true : false;
     }
 }

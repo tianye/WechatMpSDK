@@ -140,7 +140,7 @@ class CardApi extends BaseApi
     public function cardApiTicket($jus = false)
     {
         $key        = $this->getAppId() . 'card_api_ticket';
-        $api_ticket = S($key);
+        $api_ticket = $this->cache($key);
 
         if (false == $api_ticket || $jus) {
             $this->apitype = 'cgi-bin';
@@ -156,7 +156,7 @@ class CardApi extends BaseApi
 
             $api_ticket = $res['ticket'];
 
-            S($key, $api_ticket, 7200 - 300);
+            $this->cache($key, $api_ticket, 3000);
         }
 
         return $api_ticket;
