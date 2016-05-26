@@ -143,6 +143,16 @@ class BaseApi
     }
 
     /**
+     * 获取api原始返回值
+     *
+     * @return string
+     */
+    final public function getApiData()
+    {
+        return Api::getApiData();
+    }
+
+    /**
      * 设置post操作的get参数.
      *
      * @param $name

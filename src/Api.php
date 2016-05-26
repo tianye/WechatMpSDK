@@ -107,7 +107,7 @@ class Api
     }
 
     /**
-     * 设置api结构原始返回值
+     * 设置api原始返回值
      *
      */
     public static function setApiData($apiData)
@@ -116,7 +116,7 @@ class Api
     }
 
     /**
-     * 获取api结构原始返回值
+     * 获取api原始返回值
      *
      * @return array
      */
@@ -543,7 +543,7 @@ class Api
 
         $apiData           = [];
         $apiData['status'] = $status;
-        $apiData['status'] = $header;
+        $apiData['header'] = $header;
         $apiData['info']   = $apiReturnData;
 
         self::setApiData($apiData);
