@@ -1,6 +1,8 @@
 # WechatMpSDK
 微信服务号SDK
 
+安装: `composer require tianye/wechat-mp-sdk dev-master -vvv`
+
 ```
 <?
   /**
