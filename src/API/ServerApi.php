@@ -72,7 +72,7 @@ class ServerApi extends BaseApi
 
             exit($rest_xml);
         } else {
-            exit('FAILURE');
+            return false;
         }
     }
 
