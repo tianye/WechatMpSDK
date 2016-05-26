@@ -2,6 +2,9 @@
 
 namespace Wechat\Utils\Code;
 
+use Wechat\Utils\Code\ErrorCode;
+use Wechat\Utils\Code\Pkcs7Encoder;
+
 /**
  * Prpcrypt class
  *

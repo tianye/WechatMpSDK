@@ -2,6 +2,8 @@
 
 namespace Wechat\Utils\Code;
 
+use Wechat\Utils\Code\ErrorCode;
+
 /**
  * SHA1 class
  *
@@ -12,12 +14,10 @@ class SHA1
     /**
      * 用SHA1算法生成安全签名
      *
-     * @param string $token       票据
-     * @param string $timestamp   时间戳
-     * @param string $nonce       随机字符串
-     * @param string $encrypt_msg 密文消息
-     *
-     * @return array
+     * @param string $token     票据
+     * @param string $timestamp 时间戳
+     * @param string $nonce     随机字符串
+     * @param string $encrypt   密文消息
      */
     public function getSHA1($token, $timestamp, $nonce, $encrypt_msg)
     {

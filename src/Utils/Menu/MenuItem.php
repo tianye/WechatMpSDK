@@ -8,6 +8,7 @@
 namespace Wechat\Utils\Menu;
 
 use Closure;
+use Wechat\Utils\Menu\MagicAttributes;
 
 /**
  * 菜单项

@@ -1,12 +1,18 @@
 <?php
 namespace Wechat\Utils\Code;
 
-    /**
-     * 对公众平台发送给公众账号的消息加解密示例代码.
-     *
-     * @copyright Copyright (c) 1998-2014 Tencent Inc.
-     */
-    
+/**
+ * 对公众平台发送给公众账号的消息加解密示例代码.
+ *
+ * @copyright Copyright (c) 1998-2014 Tencent Inc.
+ */
+
+use Wechat\Utils\Code\Sha1;
+use Wechat\Utils\Code\Xmlparse;
+use Wechat\Utils\Code\Pkcs7Encoder;
+use Wechat\Utils\Code\ErrorCode;
+use Wechat\Utils\Code\Prpcrypt;
+
 /**
  * 1.第三方回复加密消息给公众平台；
  * 2.第三方收到公众平台发送的消息，验证消息的安全性，并对消息进行解密。

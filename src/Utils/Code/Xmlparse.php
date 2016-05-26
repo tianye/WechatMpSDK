@@ -39,8 +39,6 @@ class XMLParse
      * @param string $signature 安全签名
      * @param string $timestamp 时间戳
      * @param string $nonce     随机字符串
-     *
-     * @return string
      */
     public function generate($encrypt, $signature, $timestamp, $nonce)
     {
