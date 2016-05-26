@@ -1,6 +1,6 @@
 <?php
 
-namespace WeixinAPI\CacheDriver;
+namespace Wechat\CacheDriver;
 
 use Wechat\CacheDriver\BaseDriver;
 
