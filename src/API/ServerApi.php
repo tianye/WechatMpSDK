@@ -25,7 +25,7 @@ class ServerApi extends BaseApi
 
     public function on($target, $event, $callback = null)
     {
-        $echostr        = $_GET['echostr'];
+        $echostr        = isset($_GET['echostr']) ? $_GET['echostr'] : null;
         $checkSignature = $this->checkSignature();
 
         if (!$checkSignature) {
@@ -65,7 +65,7 @@ class ServerApi extends BaseApi
 
             $rest_xml = $this->arrayToXml($rest_array);
 
-            $msg_signature = $_GET['msg_signature'];
+            $msg_signature = isset($_GET['msg_signature']) ? $_GET['msg_signature'] : null;
             if (!empty($msg_signature) && $msg_signature != '') {
                 $rest_xml = $this->encryptMsg($rest_xml);
             }
@@ -90,9 +90,9 @@ class ServerApi extends BaseApi
     public function checkSignature($token = null)
     {
         $config_token = API::getToken();
-        $signature    = $_GET['signature'];
-        $timestamp    = $_GET['timestamp'];
-        $nonce        = $_GET['nonce'];
+        $signature    = isset($_GET['signature']) ? $_GET['signature'] : null;
+        $timestamp    = isset($_GET['timestamp']) ? $_GET['timestamp'] : null;
+        $nonce        = isset($_GET['nonce']) ? $_GET['nonce'] : null;
         $token        = empty($token) ? $config_token : $token;
         $tmpArr       = [$token, $timestamp, $nonce];
         sort($tmpArr, SORT_STRING);
@@ -270,7 +270,7 @@ class ServerApi extends BaseApi
         if (!$object || !is_object($object) || empty($object)) {
             $xml = file_get_contents('php://input');
 
-            $msg_signature = $_GET['msg_signature'];
+            $msg_signature = isset($_GET['msg_signature']) ? $_GET['msg_signature'] : null;
 
             if (!empty($msg_signature) && $msg_signature != '') {
                 $xml = $this->decryptMsg($xml);
