@@ -14,6 +14,8 @@ class Api
     private static $selfInstanceMap = []; // 实例列表;
     private static $postQueryStr    = []; // post数据时 需要携带的查询字符串
 
+    private static $apiData; //返回的数据
+
     private static $API_URL; // 微信接口地址
 
     private static $APP_ID; // 应用ID;
@@ -102,6 +104,25 @@ class Api
     public static function getError()
     {
         return self::$error;
+    }
+
+    /**
+     * 设置api结构原始返回值
+     *
+     */
+    public static function setApiData($apiData)
+    {
+        self::$apiData = $apiData;
+    }
+
+    /**
+     * 获取api结构原始返回值
+     *
+     * @return array
+     */
+    public static function getApiData()
+    {
+        return self::$apiData;
     }
 
     /**
@@ -519,6 +540,13 @@ class Api
             return false;
         }
         $apiReturnData = json_decode($returnData, true);
+
+        $apiData           = [];
+        $apiData['status'] = $status;
+        $apiData['status'] = $header;
+        $apiData['info']   = $apiReturnData;
+
+        self::setApiData($apiData);
 
         if (!$apiReturnData && substr($header['Content-Type'], 0, 16) != 'application/json') {
             $apiReturnData            = [];
