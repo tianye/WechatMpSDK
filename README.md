@@ -3,6 +3,8 @@
 
 安装: `composer require tianye/wechat-mp-sdk dev-master -vvv`
 
+调用使用 实例: [WechatMpSDK-demo](https://github.com/tianye/WechatMpSDK-demo)
+
 ```
 <?
   /**
