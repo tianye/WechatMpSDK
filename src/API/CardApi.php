@@ -1009,4 +1009,20 @@ class CardApi extends BaseApi
 
         return $res;
     }
+
+    /**
+     * 卡券开放类目查询接口
+     *
+     * @return array|bool
+     */
+    public function getapplyprotocol()
+    {
+        $this->apitype = 'card';
+        $this->module  = 'getapplyprotocol';
+
+        $queryStr = [];
+        $res      = $this->_get('', $queryStr);
+
+        return $res;
+    }
 }
