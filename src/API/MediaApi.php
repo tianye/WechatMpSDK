@@ -107,11 +107,19 @@ class MediaApi extends BaseApi
 
         $file_tail = explode("/", $rest['type']);
 
+        /* 判断是不是阿里云服务器 */
+        if ($rest['header']['Server'] == 'AliyunOSS') {
+            $imgType      = substr($url, strrpos($url, '.') + 1);
+            $file_type    = $type . '/' . $imgType;
+            $file_tail[1] = $imgType;
+        } else {
+            $file_type = $rest['type'];
+        }
+
         $this->setPostQueryStr('type', $type);
 
         $name      = 'media'; // 设置上传文件键名 固定为media
         $file_name = md5(uniqid(rand(1000, 9999))) . '.' . $file_tail[1]; // 设置上传文件名
-        $file_type = $rest['type'];
         $key       = "name=\"{$name}\"; filename=\"{$file_name}\"\r\nContent-Type: {$file_type}\r\n"; // curl设置上传文件的一种方法.
 
         $param       = [];
@@ -307,12 +315,20 @@ class MediaApi extends BaseApi
     {
         $node = 'uploadimg';
 
-        $rest = self::curl_get($url);
-
+        $rest      = self::curl_get($url);
         $file_tail = explode("/", $rest['type']);
+
+        /* 判断是不是阿里云服务器 */
+        if ($rest['header']['Server'] == 'AliyunOSS') {
+            $imgType      = substr($url, strrpos($url, '.') + 1);
+            $file_type    = 'image/' . $imgType;
+            $file_tail[1] = $imgType;
+        } else {
+            $file_type = $rest['type'];
+        }
+
         $name      = 'media';
         $file_name = md5(uniqid(rand(1000, 9999))) . '.' . $file_tail[1]; // 设置上传文件名
-        $file_type = $rest['type'];
         $imgSize   = $rest['size'];
         //1M = 1048576字节 微信允许上传的最大文件
         if ($imgSize >= 1048576) {
