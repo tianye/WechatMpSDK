@@ -378,6 +378,7 @@ class MediaApi extends BaseApi
         $apiReturnData            = [];
         $apiReturnData['type']    = $header['Content-Type'];
         $apiReturnData['size']    = $header['Content-Length'];
+        $apiReturnData['header']  = $header;
         $apiReturnData['content'] = $body;
 
         return $apiReturnData;
