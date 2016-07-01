@@ -3,7 +3,7 @@
 
 安装: `composer require tianye/wechat-mp-sdk dev-master -vvv`
 
-调用使用 实例: [WechatMpSDK-demo](https://github.com/tianye/WechatMpSDK-demo)
+调用使用 实例: [WechatMpSDK-demo](https://github.com/tianye/WechatMpSDK-demo/tree/master/Application/Home/Controller)
 
 ### 0.0初始化服务号配置
 
