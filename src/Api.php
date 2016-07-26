@@ -433,6 +433,8 @@ class Api
         $urlarr = parse_url($apiUrl);
         parse_str($urlarr['query'], $parr);
 
+        usleep(500000);
+
         $parr['access_token'] = self::getAccessToken();
 
         $apiUrl = $urlarr['scheme'] . '://' . $urlarr['host'] . $urlarr['path'];
@@ -479,6 +481,8 @@ class Api
     {
         $urlarr = parse_url($apiUrl);
         parse_str($urlarr['query'], $parr);
+
+        usleep(500000);
 
         $parr['access_token'] = self::getAccessToken();
 
@@ -564,7 +568,7 @@ class Api
             return false;
         }
 
-        if (isset($apiReturnData['errcode']) && $apiReturnData['errcode'] == 42001) {
+        if (isset($apiReturnData['errcode']) && ($apiReturnData['errcode'] == 42001 || $apiReturnData['errcode'] == 40001)) {
             $error = '错误码:' . $apiReturnData['errcode'] . ', 错误信息:' . $apiReturnData['errmsg'] . '-已重新刷新access_token';
 
             //强制刷新 AccessToken
