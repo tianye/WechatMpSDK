@@ -1,5 +1,15 @@
 # WechatMpSDK
 微信服务号SDK
+<p align="center">
+<a href="https://travis-ci.org/tianye/wechat-mp-sdk"><img src="https://travis-ci.org/tianye/wechat-mp-sdk.svg?branch=master" alt="Build Status"></a>
+<a href="https://packagist.org/packages/tianye/wechat-mp-sdk"><img src="https://poser.pugx.org/tianye/wechat-mp-sdk/v/stable.svg" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/tianye/wechat-mp-sdk"><img src="https://poser.pugx.org/tianye/wechat-mp-sdk/v/unstable.svg" alt="Latest Unstable Version"></a>
+<a href="https://scrutinizer-ci.com/g/tianye/wechat-mp-sdk/build-status/master"><img src="https://scrutinizer-ci.com/g/tianye/wechat-mp-sdk/badges/build.png?b=master" alt="Build Status"></a>
+<a href="https://scrutinizer-ci.com/g/tianye/wechat-mp-sdk/?branch=master"><img src="https://scrutinizer-ci.com/g/tianye/wechat-mp-sdk/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"></a>
+<a href="https://scrutinizer-ci.com/g/tianye/wechat-mp-sdk/?branch=master"><img src="https://scrutinizer-ci.com/g/tianye/wechat-mp-sdk/badges/coverage.png?b=master" alt="Code Coverage"></a>
+<a href="https://packagist.org/packages/tianye/wechat-mp-sdk"><img src="https://poser.pugx.org/tianye/wechat-mp-sdk/downloads" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/tianye/wechat-mp-sdk"><img src="https://poser.pugx.org/tianye/wechat-mp-sdk/license" alt="License"></a>
+</p>
 
 安装: `composer require tianye/wechat-mp-sdk dev-master -vvv`
 
