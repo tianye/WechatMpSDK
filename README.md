@@ -1,7 +1,7 @@
 # WechatMpSDK
 微信服务号SDK
 <p align="center">
-<a href="https://travis-ci.org/tianye/wechat-mp-sdk"><img src="https://travis-ci.org/tianye/wechat-mp-sdk.svg?branch=master" alt="Build Status"></a>
+<a href="https://travis-ci.org/tianye/WechatMpSDK"><img src="https://travis-ci.org/tianye/WechatMpSDK.svg?branch=master" alt="Build Status"></a>
 <a href="https://packagist.org/packages/tianye/wechat-mp-sdk"><img src="https://poser.pugx.org/tianye/wechat-mp-sdk/v/stable.svg" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/tianye/wechat-mp-sdk"><img src="https://poser.pugx.org/tianye/wechat-mp-sdk/v/unstable.svg" alt="Latest Unstable Version"></a>
 <a href="https://scrutinizer-ci.com/g/tianye/WechatMpSDK/build-status/master"><img src="https://scrutinizer-ci.com/g/tianye/WechatMpSDK/badges/build.png?b=master" alt="Build Status"></a>
