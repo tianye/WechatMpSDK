@@ -20,14 +20,17 @@
 ```php
 <?
   /**
-    * 初始化服务号配置
-    *
-    * @param string $appid 
-    * @param string $appsecret
-    * @param string $originalid
-    * @param string $apiurl
-    */
-Api::init($appid, $appsecret, $originalid, $apiurl);
+      * 接口初始化, 必须执行此方法才可以使用接口.
+      *
+      * @param string $appid
+      * @param string $appsecret        服务号APP_SECRET
+      * @param string $originalid       服务号ORIGINAL_ID
+      * @param string $token            服务号TOKEN
+      * @param string $encoding_aes_key 服务号ENCODING_AES_KEY
+      * @param string $apiurl           微信接口地址 APIURL 默认 微信接口 地址 可以 自定义 Proxy
+      * @param string $cacheDriver      缓存驱动 Redis File ThinkPHP(兼容项目-不建议使用) ......
+      */
+ Api::init($appid, $appsecret, $originalid, $token, $encoding_aes_key, $apiurl, $cacheDriver);
 ```
 
 
