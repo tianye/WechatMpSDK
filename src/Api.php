@@ -32,16 +32,15 @@ class Api
     /**
      * 接口初始化, 必须执行此方法才可以使用接口.
      *
-     * @author Tian
-     *
-     * @date   2015-12-08
-     *
-     * @param string $apiurl     微信接口地址
-     * @param string $appid      服务号APP_ID
-     * @param string $appsecret  服务号APP_SECRET
-     * @param string $originalid 服务号ORIGINAL_ID
+     * @param string $appid
+     * @param string $appsecret        服务号APP_SECRET
+     * @param string $originalid       服务号ORIGINAL_ID
+     * @param string $token            服务号TOKEN
+     * @param string $encoding_aes_key 服务号ENCODING_AES_KEY
+     * @param string $apiurl           微信接口地址 APIURL
+     * @param string $cacheDriver      缓存驱动 Redis File ThinkPHP ......
      */
-    public static function init($appid, $appsecret, $originalid = '', $token, $encoding_aes_key, $apiurl = 'https://api.weixin.qq.com/', $cacheDriver = 'ThinkPHP')
+    public static function init($appid, $appsecret, $originalid = '', $token, $encoding_aes_key, $apiurl = 'https://api.weixin.qq.com/', $cacheDriver = 'File')
     {
         self::$API_URL          = $apiurl ? $apiurl : 'https://api.weixin.qq.com/';
         self::$APP_ID           = $appid;
