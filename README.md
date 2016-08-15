@@ -11,7 +11,7 @@
 <a href="https://packagist.org/packages/tianye/wechat-mp-sdk"><img src="https://poser.pugx.org/tianye/wechat-mp-sdk/license" alt="License"></a>
 </p>
 
-安装: `composer require tianye/wechat-mp-sdk dev-master -vvv`
+安装: `composer require tianye/wechat-mp-sdk -vvv`
 
 调用使用 实例: [WechatMpSDK-demo](https://github.com/tianye/WechatMpSDK-demo/tree/master/Application/Home/Controller)
 
