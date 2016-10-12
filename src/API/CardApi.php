@@ -1025,4 +1025,41 @@ class CardApi extends BaseApi
 
         return $res;
     }
+
+    /**
+     * 朋友券锁定接口
+     *
+     * @author yangyang <yangyang@iwork365.com>
+     *
+     * @date   2016-10-12
+     *
+     * @param  int     $code    需要锁定的code码
+     * @param  string  $card_id 需要锁定的card_id
+     * @param  string  $openid  领取者的openid
+     * @param  boolean $is_mark 是否要mark（占用）这个code，填写true或者false，表示占用或解除占用
+     *
+     * @return array|bool
+     */
+    public function mark($code, $card_id, $openid, $is_mark = true)
+    {
+        if (empty($code) || empty($card_id) || empty($openid)) {
+            $this->setError('参数错误');
+
+            return false;
+        }
+
+        $queryStr = [];
+
+        $queryStr['code']    = $code;
+        $queryStr['card_id'] = $card_id;
+        $queryStr['openid']  = $openid;
+        $queryStr['is_mark'] = $is_mark;
+
+        $this->apitype = 'card';
+        $this->module  = 'code';
+        $res           = $this->_post('mark', $queryStr);
+
+        return $res;
+    }
+
 }
