@@ -1,3 +1,6 @@
+避免重复性的造轮子请使用: [https://github.com/overtrue/wechat](https://github.com/overtrue/wechat)
+
+
 # WechatMpSDK
 微信服务号SDK
 <p align="center">
