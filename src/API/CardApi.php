@@ -879,19 +879,6 @@ class CardApi extends BaseApi
     /**
      * 设置开卡字段接口
      *
-     * @param  [type] $card_id             卡券ID。
-     * @param  array $required_form 会员卡激活时的必填选项。
-     * @param  array $optional_form 会员卡激活时的选填项。
-     *
-     * string  common_field_id_list 微信格式化的选项类型。见以下列表。
-     * string  custom_field_list    喜欢的家具风格 自定义选项名称。
-     *
-     * @return
-     */
-
-    /**
-     * 设置开卡字段接口
-     *
      * @param string $card_id       卡券ID。
      * @param array  $required_form 会员卡激活时的必填选项。
      * @param array  $optional_form 会员卡激活时的选填项。
