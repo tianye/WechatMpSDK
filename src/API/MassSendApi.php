@@ -177,8 +177,8 @@ class MassSendApi extends BaseApi
     /**
      * 图文消息
      *
-     * @param  boolean $media_id 用于设定是否向全部用户发送，选择true该消息群发给所有用户，选择false可根据group_id发送给指定群组的用户
-     * @param  array   $openids  填写图文消息的接收者，一串OpenID列表，OpenID最少2个，最多10000个
+     * @param  string $media_id 用于设定是否向全部用户发送，选择true该消息群发给所有用户，选择false可根据group_id发送给指定群组的用户
+     * @param  array  $openids  填写图文消息的接收者，一串OpenID列表，OpenID最少2个，最多10000个
      *
      * @return int     msg_id     发送出去的消息ID
      */
@@ -267,8 +267,10 @@ class MassSendApi extends BaseApi
      *
      * @param  string $media_id 用于群发的消息的media_id
      * @param  array  $openids  填写图文消息的接收者，一串OpenID列表，OpenID最少2个，最多10000个
+     * @param  string $title
+     * @param  string $description
      *
-     * @return int     msg_id     发送出去的消息ID
+     * @return string     msg_id     发送出去的消息ID
      */
     public function openidVideo($media_id = '', $openids = [], $title = '', $description = '')
     {
@@ -323,9 +325,9 @@ class MassSendApi extends BaseApi
     /**
      * 图文消息
      *
-     * @param  boolean $media_id 用于设定是否向全部用户发送，选择true该消息群发给所有用户，选择false可根据group_id发送给指定群组的用户
-     * @param  string  $userid   接收消息用户对应该公众号的openid，该字段也可以改为towxname，以实现对微信号的预览
-     * @param  string  $type     接受用户 是 openid  还是 wxname
+     * @param  string $media_id 用于设定是否向全部用户发送，选择true该消息群发给所有用户，选择false可根据group_id发送给指定群组的用户
+     * @param  string $userid   接收消息用户对应该公众号的openid，该字段也可以改为towxname，以实现对微信号的预览
+     * @param  string $type     接受用户 是 openid  还是 wxname
      *
      * @return int     msg_id     发送出去的消息ID
      */
@@ -502,8 +504,11 @@ class MassSendApi extends BaseApi
      * 删除群发【订阅号与服务号认证后均可用】
      * 群发只有在刚发出的半小时内可以删除，发出半小时之后将无法被删除
      *
-     * @param int $msg_id 发送出去的消息ID
+     * @param string $msg_id 发送出去的消息ID
+     *
+     * @return array|bool
      */
+
     public function delete($msg_id)
     {
         if (empty($msg_id)) {
@@ -529,8 +534,11 @@ class MassSendApi extends BaseApi
     /**
      * 查询群发消息发送状态【订阅号与服务号认证后均可用】
      *
-     * @param int $msg_id 发送出去的消息ID
+     * @param string $msg_id 发送出去的消息ID
+     *
+     * @return array|bool
      */
+
     public function massGet($msg_id)
     {
         if (empty($msg_id)) {

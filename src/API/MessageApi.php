@@ -11,8 +11,8 @@ class MessageApi extends BaseApi
     /**
      * [__call 魔术方法 生成回调array]
      *
-     * @param  funtion $MsgType [类型]
-     * @param  array   $datas   [参数]
+     * @param  mixed $MsgType [类型]
+     * @param  array $datas   [参数]
      *
      * @return string xml          [XML]
      */

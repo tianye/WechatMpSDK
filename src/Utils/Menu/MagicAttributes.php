@@ -118,8 +118,10 @@ abstract class MagicAttributes
     /**
      * 魔术写入
      *
-     * @param string $property
-     * @param mixed  $value
+     * @param $property
+     * @param $value
+     *
+     * @return \Wechat\Utils\Menu\MagicAttributes
      */
     public function __set($property, $value)
     {

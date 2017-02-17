@@ -21,14 +21,15 @@ class Url
     public static function current()
     {
         $protocol = (!empty($_SERVER['HTTPS'])
-                        && $_SERVER['HTTPS'] !== 'off'
-                        || $_SERVER['SERVER_PORT'] === 443) ? 'https://' : 'http://';
+            && $_SERVER['HTTPS'] !== 'off'
+            || $_SERVER['SERVER_PORT'] === 443) ? 'https://' : 'http://';
 
         if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
         } else {
             $host = $_SERVER['HTTP_HOST'];
         }
-        return $protocol.$host.$_SERVER['REQUEST_URI'];
+
+        return $protocol . $host . $_SERVER['REQUEST_URI'];
     }
 }

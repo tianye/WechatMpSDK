@@ -112,6 +112,7 @@ class Api
     /**
      * 设置api原始返回值
      *
+     * @param $apiData
      */
     public static function setApiData($apiData)
     {
@@ -267,9 +268,10 @@ class Api
      * @param string $module   指定接口模块
      * @param string $node     指定接口模块的节点
      * @param array  $queryStr 查询字符串
-     * @param array  $header   http头部附加信息
+     * @param bool   $arsort   是否排序
+     * @param string $apitype  Api类型
      *
-     * @return array 错误时返回false
+     * @return array|bool 错误时返回false
      */
     public static function _get($module, $node, $queryStr = [], $arsort = true, $apitype = 'cgi-bin')
     {
@@ -345,8 +347,9 @@ class Api
      * @param string $node       指定接口模块的节点
      * @param array  $data       要发送的数据
      * @param bool   $jsonEncode 是否转换为jsons数据
+     * @param string $apitype    Api类型
      *
-     * @return array 错误时返回false;
+     * @return array|bool 错误时返回false;
      */
     public static function _post($module, $node, $data, $jsonEncode = true, $apitype = 'cgi-bin')
     {
@@ -530,7 +533,7 @@ class Api
      *
      * @param array $apiReturnData 由_post|| _get方法返回的数据.
      *
-     * @return array
+     * @return array|bool
      */
     public static function packData($apiReturnData)
     {
@@ -639,6 +642,10 @@ class Api
 
     /**
      * 解析头信息
+     *
+     * @param $raw_headers
+     *
+     * @return array
      */
     public static function http_parse_headers($raw_headers)
     {

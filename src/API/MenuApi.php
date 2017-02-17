@@ -14,7 +14,9 @@ class MenuApi extends BaseApi
     /**
      * 设置菜单
      *
-     * @return bool
+     * @param $menus
+     *
+     * @return array|bool
      */
     public function set($menus)
     {

@@ -85,11 +85,11 @@ class ServerApi extends BaseApi
      *
      * @param string $token [token]
      *
-     * @return bool
+     * @return mixed|bool
      */
     public function checkSignature($token = null)
     {
-        $config_token = API::getToken();
+        $config_token = Api::getToken();
         $signature    = isset($_GET['signature']) ? $_GET['signature'] : null;
         $timestamp    = isset($_GET['timestamp']) ? $_GET['timestamp'] : null;
         $nonce        = isset($_GET['nonce']) ? $_GET['nonce'] : null;
@@ -101,9 +101,9 @@ class ServerApi extends BaseApi
 
         if ($tmpStr == $signature && $signature != null) {
             return $this;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -139,7 +139,7 @@ class ServerApi extends BaseApi
      * @param string $xml      [XML]
      * @param bool   $encipher [是否加密]
      *
-     * @return array XML
+     * @return array|bool XML
      */
     public function receiveAgent($url = '', $token = '', $xml = '', $encipher = false)
     {
@@ -189,9 +189,9 @@ class ServerApi extends BaseApi
             $rest_array  = json_decode(json_encode($object_rest), true);
 
             return $rest_array;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -203,9 +203,9 @@ class ServerApi extends BaseApi
      */
     public function encryptMsg($xml)
     {
-        $appId          = API::getAppId();
-        $token          = API::getToken();
-        $encodingAesKey = API::getEncoding_Aes_Key();
+        $appId          = Api::getAppId();
+        $token          = Api::getToken();
+        $encodingAesKey = Api::getEncoding_Aes_Key();
 
         if (empty($token) || !$token || empty($encodingAesKey) || !$encodingAesKey) {
             return $xml;
@@ -236,9 +236,9 @@ class ServerApi extends BaseApi
      */
     public function decryptMsg($xml, $msg_signature = null, $timeStamp = null, $nonce = null)
     {
-        $appId          = API::getAppId();
-        $token          = API::getToken();
-        $encodingAesKey = API::getEncoding_Aes_Key();
+        $appId          = Api::getAppId();
+        $token          = Api::getToken();
+        $encodingAesKey = Api::getEncoding_Aes_Key();
 
         $msg_signature = !empty($msg_signature) ? $msg_signature : $_GET['msg_signature'];
         $timeStamp     = !empty($timeStamp) ? $timeStamp : $_GET['timestamp'];
@@ -260,6 +260,7 @@ class ServerApi extends BaseApi
      * 魔术方法 处理 返回结果
      *
      * @param  string $target [事件]
+     * @param         $event
      *
      * @return string $event  [类型]
      * @return array  $xml    [xml]

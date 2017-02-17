@@ -204,9 +204,9 @@ class KfaccountApi extends BaseApi
     /**
      * 图文消息- 自定义
      *
-     * @param  boolean $articles   图文消息
-     * @param  string  $openid     接收消息用户对应该公众号的openid
-     * @param string   $kf_account 客服账号
+     * @param  array  $articles   图文消息
+     * @param  string $openid     接收消息用户对应该公众号的openid
+     * @param  string $kf_account 客服账号
      *
      * @return int     msg_id     发送出去的消息ID
      */

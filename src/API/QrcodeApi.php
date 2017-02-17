@@ -16,7 +16,7 @@ class QrcodeApi extends BaseApi
      * @param  integer $scene_id       [场景值ID]
      * @param  integer $expire_seconds [该二维码有效时间，以秒为单位。 最大不超过2592000（即30天），此字段如果不填，则默认有效期为30秒]
      *
-     * @return array  $res
+     * @return bool|array  $res
      */
     public function create($scene_id = 0, $expire_seconds = 30)
     {
@@ -50,7 +50,7 @@ class QrcodeApi extends BaseApi
      *
      * @param  integer $scene_id [场景值ID]
      *
-     * @return array  $res
+     * @return bool|array  $res
      */
     public function createLimitInt($scene_id = 0)
     {
@@ -77,7 +77,7 @@ class QrcodeApi extends BaseApi
      *
      * @param  integer $scene_id [场景值ID]
      *
-     * @return array  $res
+     * @return bool|array  $res
      */
     public function createLimitStr($scene_str = '')
     {
@@ -119,7 +119,9 @@ class QrcodeApi extends BaseApi
         $res = $this->_get('', $queryStr);
 
         if (!$res) {
-            E($this->getError());
+            $this->setError('二维码获取失败');
+
+            return false;
         }
 
         return $res;

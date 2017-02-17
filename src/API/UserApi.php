@@ -14,6 +14,7 @@ class UserApi extends BaseApi
      * @author Tian
      *
      * @param string $openid 用户openid
+     * @param string $lang
      *
      * @return array 用户信息.
      */
@@ -36,7 +37,7 @@ class UserApi extends BaseApi
      *
      * @param  array $user_list 用户openid列表
      *
-     * @return array 用户信息.
+     * @return array|bool 用户信息.
      */
     public function getUserList(array $user_list)
     {

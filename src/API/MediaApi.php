@@ -59,7 +59,7 @@ class MediaApi extends BaseApi
      * @param string $file 文件  为 form 表单的 $_FILES['xxx'];
      * @param string $type 文件类型
      *
-     * @return array 接口返回结果
+     * @return bool|array 接口返回结果
      */
     public function uploadFrom($file, $type = 'image')
     {
@@ -191,7 +191,7 @@ class MediaApi extends BaseApi
      * @param string $title       标题
      * @param string $description 描述
      *
-     * @return array.  "type":"video","media_id":"IhdaAQXuvJtGzwwc0abfXnzeezfO0NgPK6AQYShD8RQYMTtfzbLdBIQkQziv2XJc","created_at":1398848981
+     * @return bool|array.  "type":"video","media_id":"IhdaAQXuvJtGzwwc0abfXnzeezfO0NgPK6AQYShD8RQYMTtfzbLdBIQkQziv2XJc","created_at":1398848981
      */
     public function uploadvideo($media_id, $title, $description)
     {
@@ -332,7 +332,7 @@ class MediaApi extends BaseApi
         $imgSize   = $rest['size'];
         //1M = 1048576字节 微信允许上传的最大文件
         if ($imgSize >= 1048576) {
-            $this->error = '文件过大';
+            $this->setError('文件过大');
 
             return false;
         }

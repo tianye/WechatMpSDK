@@ -58,7 +58,7 @@ class PoiApi extends BaseApi
      *
      * @param  int $poi_id 创建门店后获取poi_id
      *
-     * @return array
+     * @return bool|array
      */
     public function getpoi($poi_id)
     {
@@ -82,7 +82,7 @@ class PoiApi extends BaseApi
      * @param  integer $begin 开始位置，0 即为从第一条开始查询
      * @param  integer $limit 返回数据条数，最大允许50，默认为20
      *
-     * @return  array
+     * @return  bool|array
      */
     public function getpoilist($begin = 0, $limit = 20)
     {
@@ -106,7 +106,7 @@ class PoiApi extends BaseApi
      *
      * @param  array $base_info 基本信息
      *
-     * @return  array
+     * @return  bool|array
      */
     public function updatepoi($base_info = [])
     {
