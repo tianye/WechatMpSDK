@@ -36,7 +36,9 @@ class QrcodeApi extends BaseApi
             'expire_seconds' => $expire_seconds,
             'action_name'    => 'QR_SCENE',
             'action_info'    => [
-                'scene_id' => $scene_id,
+                'scene' => [
+                    'scene_id' => $scene_id,
+                ],
             ],
         ];
 
@@ -63,7 +65,9 @@ class QrcodeApi extends BaseApi
         $queryStr = [
             'action_name' => 'QR_LIMIT_SCENE',
             'action_info' => [
-                'scene_id' => $scene_id,
+                'scene' => [
+                    'scene_id' => $scene_id,
+                ],
             ],
         ];
 
