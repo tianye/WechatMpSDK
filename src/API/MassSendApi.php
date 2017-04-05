@@ -185,7 +185,7 @@ class MassSendApi extends BaseApi
     public function openidMpnews($media_id = '', $openids = [])
     {
         $queryStr                       = [];
-        $queryStr['filter']             = $openids;
+        $queryStr['touser']             = $openids;
         $queryStr['mpnews']['media_id'] = $media_id;
         $queryStr['msgtype']            = 'mpnews';
 
@@ -207,7 +207,7 @@ class MassSendApi extends BaseApi
     public function openidText($content = '', $openids = [])
     {
         $queryStr                    = [];
-        $queryStr['filter']          = $openids;
+        $queryStr['touser']          = $openids;
         $queryStr['text']['content'] = $content;
         $queryStr['msgtype']         = 'text';
 
@@ -229,7 +229,7 @@ class MassSendApi extends BaseApi
     public function openidVoice($media_id = '', $openids = [])
     {
         $queryStr                      = [];
-        $queryStr['filter']            = $openids;
+        $queryStr['touser']            = $openids;
         $queryStr['voice']['media_id'] = $media_id;
         $queryStr['msgtype']           = 'voice';
 
@@ -251,7 +251,7 @@ class MassSendApi extends BaseApi
     public function openidImage($media_id = '', $openids = [])
     {
         $queryStr                      = [];
-        $queryStr['filter']            = $openids;
+        $queryStr['touser']            = $openids;
         $queryStr['image']['media_id'] = $media_id;
         $queryStr['msgtype']           = 'image';
 
@@ -275,7 +275,7 @@ class MassSendApi extends BaseApi
     public function openidVideo($media_id = '', $openids = [], $title = '', $description = '')
     {
         $queryStr                      = [];
-        $queryStr['filter']            = $openids;
+        $queryStr['touser']            = $openids;
         $queryStr['video']['media_id'] = $media_id;
 
         if (!empty($title)) {
@@ -306,7 +306,7 @@ class MassSendApi extends BaseApi
     public function openidWxcard($card_id = '', $openids = [])
     {
         $queryStr                      = [];
-        $queryStr['filter']            = $openids;
+        $queryStr['touser']            = $openids;
         $queryStr['wxcard']['card_id'] = $card_id;
         $queryStr['msgtype']           = 'wxcard';
 
@@ -338,7 +338,7 @@ class MassSendApi extends BaseApi
         if ($type == 'towxname') {
             $queryStr['towxname'] = $userid;
         } else {
-            $queryStr['filter'] = $userid;
+            $queryStr['touser'] = $userid;
         }
 
         $queryStr['mpnews']['media_id'] = $media_id;
@@ -367,7 +367,7 @@ class MassSendApi extends BaseApi
         if ($type == 'towxname') {
             $queryStr['towxname'] = $userid;
         } else {
-            $queryStr['filter'] = $userid;
+            $queryStr['touser'] = $userid;
         }
 
         $queryStr['text']['content'] = $content;
@@ -396,7 +396,7 @@ class MassSendApi extends BaseApi
         if ($type == 'towxname') {
             $queryStr['towxname'] = $userid;
         } else {
-            $queryStr['filter'] = $userid;
+            $queryStr['touser'] = $userid;
         }
 
         $queryStr['voice']['media_id'] = $media_id;
@@ -425,7 +425,7 @@ class MassSendApi extends BaseApi
         if ($type == 'towxname') {
             $queryStr['towxname'] = $userid;
         } else {
-            $queryStr['filter'] = $userid;
+            $queryStr['touser'] = $userid;
         }
 
         $queryStr['image']['media_id'] = $media_id;
@@ -454,7 +454,7 @@ class MassSendApi extends BaseApi
         if ($type == 'towxname') {
             $queryStr['towxname'] = $userid;
         } else {
-            $queryStr['filter'] = $userid;
+            $queryStr['touser'] = $userid;
         }
 
         $queryStr['mpvideo']['media_id'] = $media_id;
@@ -483,7 +483,7 @@ class MassSendApi extends BaseApi
         if ($type == 'towxname') {
             $queryStr['towxname'] = $userid;
         } else {
-            $queryStr['filter'] = $userid;
+            $queryStr['touser'] = $userid;
         }
 
         $queryStr['wxcard']['card_id'] = $card_id;
