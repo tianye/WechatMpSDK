@@ -102,4 +102,83 @@ class MenuApi extends BaseApi
 
         return $menus;
     }
+
+    /**
+     * 设置个性化菜单
+     *
+     * @author Jia <jiayanyang@digilinx.cn>
+     *
+     * @date   2017-04-11
+     *
+     * @param  array $menus     菜单数组
+     * @param  array $matchrule 个性化规则
+     *
+     * @return array|bool
+     */
+    public function setIndividuationMenu($menus, $matchrule)
+    {
+        if ($menus instanceof Closure) {
+            $menus = $menus($this);
+        }
+
+        if (!is_array($menus)) {
+            $this->setError('子菜单必须是数组或者匿名函数返回数组');
+
+            return false;
+        }
+        $menus = $this->extractMenus($menus);
+
+        $data = [
+            'button'    => $menus,
+            'matchrule' => $matchrule,
+        ];
+
+        $res = $this->_post('addconditional', $data);
+
+        return $res;
+    }
+
+    /**
+     * 测试个性化菜单匹配结果
+     *
+     * @author Jia <jiayanyang@digilinx.cn>
+     *
+     * @date   2017-04-11
+     *
+     * @param  string $openid 用户openid
+     *
+     * @return array
+     */
+    public function tryMatchUser($openid)
+    {
+        $queryStr = [
+            "user_id" => $openid,
+        ];
+
+        $res = $this->_post('trymatch', $queryStr);
+
+        return $res;
+    }
+
+    /**
+     * 删除个性化菜单
+     *
+     * @author Jia <jiayanyang@digilinx.cn>
+     *
+     * @date   2017-04-12
+     *
+     * @param  int $menuId 个性化菜单id
+     *
+     * @return array
+     */
+    public function deleteIndividuationMenu($menuId)
+    {
+        $queryStr = [
+            "menuid" => $menuId,
+        ];
+
+        $res = $this->_post('delconditional', $queryStr);
+
+        return $res;
+    }
 }
