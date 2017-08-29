@@ -2,8 +2,8 @@
 
 namespace Wechat\Utils\Code;
 
-use Wechat\Utils\Code\ErrorCode;
-use Wechat\Utils\Code\Pkcs7Encoder;
+use Exception;
+use Wechat\Utils\XML;
 
 /**
  * Prpcrypt class
@@ -12,11 +12,14 @@ use Wechat\Utils\Code\Pkcs7Encoder;
  */
 class Prpcrypt
 {
-    public $key;
+    protected $AESKey;
+    protected $blockSize;
 
     public function __construct($k)
     {
-        $this->key = base64_decode($k . "=");
+        $this->AESKey = $k;
+
+        $this->blockSize = 32;
     }
 
     /**
@@ -24,26 +27,21 @@ class Prpcrypt
      *
      * @param string $text 需要加密的明文
      *
-     * @return string 加密后的密文
+     * @param string $appId
+     *
+     * @return array
      */
-    public function encrypt($text, $appid)
+    public function encrypt($text, $appId)
     {
         try {
             //获得16位随机字符串，填充到明文之前
+            $key    = $this->getAESKey();
             $random = $this->getRandomStr();
-            $text   = $random . pack("N", strlen($text)) . $text . $appid;
-            // 网络字节序
-            $size   = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-            $module = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
-            $iv     = substr($this->key, 0, 16);
-            //使用自定义的填充方式对明文进行补位填充
-            $pkc_encoder = new PKCS7Encoder;
-            $text        = $pkc_encoder->encode($text);
-            mcrypt_generic_init($module, $this->key, $iv);
-            //加密
-            $encrypted = mcrypt_generic($module, $text);
-            mcrypt_generic_deinit($module);
-            mcrypt_module_close($module);
+            $text   = $this->encode($random . pack('N', strlen($text)) . $text . $appId);
+
+            $iv = substr($key, 0, 16);
+
+            $encrypted = openssl_encrypt($text, 'aes-256-cbc', $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, $iv);
 
             //print(base64_encode($encrypted));
             //使用BASE64对加密后的字符串进行编码
@@ -55,51 +53,52 @@ class Prpcrypt
     }
 
     /**
-     * 对密文进行解密
-     *
      * @param string $encrypted 需要解密的密文
+     * @param string $appId     APPID
      *
-     * @return string 解密得到的明文
+     * @return array|string
      */
-    public function decrypt($encrypted, $appid)
+    public function decrypt($encrypted, $appId)
     {
         try {
             //使用BASE64对需要解密的字符串进行解码
-            $ciphertext_dec = base64_decode($encrypted);
-            $module         = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
-            $iv             = substr($this->key, 0, 16);
-            mcrypt_generic_init($module, $this->key, $iv);
+            $key        = $this->getAESKey();
+            $ciphertext = base64_decode($encrypted, true);
+            $iv         = substr($key, 0, 16);
 
-            //解密
-            $decrypted = mdecrypt_generic($module, $ciphertext_dec);
-            mcrypt_generic_deinit($module);
-            mcrypt_module_close($module);
+            $decrypted = openssl_decrypt($ciphertext, 'aes-256-cbc', $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, $iv);
         } catch (Exception $e) {
             return [ErrorCode::$DecryptAESError, null];
         }
 
         try {
-            //去除补位字符
-            $pkc_encoder = new PKCS7Encoder;
-            $result      = $pkc_encoder->decode($decrypted);
-            //去除16位随机字符串,网络字节序和AppId
+            $result = $this->decode($decrypted);
+
             if (strlen($result) < 16) {
-                return "";
+                return '';
             }
-            $content     = substr($result, 16, strlen($result));
-            $len_list    = unpack("N", substr($content, 0, 4));
-            $xml_len     = $len_list[1];
-            $xml_content = substr($content, 4, $xml_len);
-            $from_appid  = substr($content, $xml_len + 4);
+
+            $content   = substr($result, 16, strlen($result));
+            $listLen   = unpack('N', substr($content, 0, 4));
+            $xmlLen    = $listLen[1];
+            $xml       = substr($content, 4, $xmlLen);
+            $fromAppId = trim(substr($content, $xmlLen + 4));
         } catch (Exception $e) {
             //print $e;
             return [ErrorCode::$IllegalBuffer, null];
         }
-        if ($from_appid != $appid) {
+        if ($fromAppId !== $appId) {
             return [ErrorCode::$ValidateAppidError, null];
         }
 
-        return [0, $xml_content];
+        $dataSet = json_decode($xml, true);
+        if ($dataSet && (JSON_ERROR_NONE === json_last_error())) {
+            // For mini-program JSON formats.
+            // Convert to XML if the given string can be decode into a data array.
+            $xml = XML::build($dataSet);
+        }
+
+        return [ErrorCode::$OK, $xml];
     }
 
     /**
@@ -118,4 +117,67 @@ class Prpcrypt
 
         return $str;
     }
+
+    /**
+     * Return AESKey.
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    protected function getAESKey()
+    {
+        if (empty($this->AESKey)) {
+            throw new Exception("Configuration mission, 'aes_key' is required.");
+        }
+
+        if (strlen($this->AESKey) !== 43) {
+            throw new Exception("The length of 'aes_key' must be 43.");
+        }
+
+        return base64_decode($this->AESKey . '=', true);
+    }
+
+    /**
+     * Decode string.
+     *
+     * @param string $decrypted
+     *
+     * @return string
+     */
+    public function decode($decrypted)
+    {
+        $pad = ord(substr($decrypted, -1));
+
+        if ($pad < 1 || $pad > $this->blockSize) {
+            $pad = 0;
+        }
+
+        return substr($decrypted, 0, (strlen($decrypted) - $pad));
+    }
+
+    /**
+     * Encode string.
+     *
+     * @param string $text
+     *
+     * @return string
+     */
+    public function encode($text)
+    {
+        $padAmount = $this->blockSize - (strlen($text) % $this->blockSize);
+
+        $padAmount = $padAmount !== 0 ? $padAmount : $this->blockSize;
+
+        $padChr = chr($padAmount);
+
+        $tmp = '';
+
+        for ($index = 0; $index < $padAmount; ++$index) {
+            $tmp .= $padChr;
+        }
+
+        return $text . $tmp;
+    }
+
 }
